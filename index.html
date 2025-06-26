@@ -1,0 +1,2159 @@
+<html lang="en" style="background:var(--cht-gray-bg-page)" dir="ltr" class="webpok avifok" _platform="pc">
+
+<head>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/css/select2.min.css" rel="stylesheet" />
+  <style>
+   
+  
+    .containerx {
+      background-color: #ffffff;
+      /* White card background */
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      /* Soft shadow */
+      max-width: 500px; 
+    }
+  
+    /* Custom Select2 styling to make it match Tailwind aesthetics */
+    .select2-container .select2-selection--single {
+      height: 42px;
+      /* Standard input height */
+      border-radius: 8px;
+      /* Rounded corners */
+      border: 1px solid #d1d5db;
+      /* Light gray border */
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      font-size: 16px;
+      color: #1f2937;
+      /* Dark gray text */
+      box-shadow: none;
+      /* No default Select2 shadow */
+      transition: border-color 0.2s ease-in-out;
+    }
+  
+    .select2-container--open .select2-selection--single {
+      border-color: #3b82f6;
+      /* Blue border when open */
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+      /* Blue shadow when open */
+    }
+  
+    .select2-container .select2-selection--single .select2-selection__rendered {
+      padding-left: 0;
+      padding-right: 0;
+      line-height: 40px;
+      /* Vertically align text */
+      color: #1f2937;
+    }
+  
+    .select2-container .select2-selection--single .select2-selection__arrow {
+      height: 40px;
+      right: 16px;
+    }
+  
+    .select2-container--default .select2-selection--single .select2-selection__arrow b {
+      border-top-color: #6b7280 !important;
+      /* Gray arrow */
+    }
+  
+    .select2-container--default.select2-container--open .select2-selection--single .select2-selection__arrow b {
+      border-bottom-color: #6b7280 !important;
+    }
+  
+    /* Dropdown results styling */
+    .select2-dropdown {
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      /* Ensure rounded corners on content */
+    }
+  
+    .select2-results__option {
+      padding: 10px 16px;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+    }
+  
+    .select2-results__option--highlighted {
+      background-color: #eff6ff !important;
+      /* Light blue highlight */
+      color: #1f2937 !important;
+    }
+  
+    .select2-results__option--selected {
+      background-color: #e0e7ff !important;
+      /* Slightly darker blue for selected */
+      color: #1f2937 !important;
+    }
+  
+    .select2-search--dropdown .select2-search__field {
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      padding: 10px 16px;
+      margin: 8px;
+      width: calc(100% - 16px);
+      font-size: 16px;
+    }
+  
+    .flag-icon {
+      width: 24px;
+      /* Adjust flag size */
+      height: 18px;
+      /* Maintain aspect ratio */
+      border-radius: 2px;
+      /* Slightly rounded flag corners */
+      margin-right: 12px;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+      /* Subtle border for flags */
+    }
+  </style>
+  <!-- jQuery CDN (Select2 dependency) -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Select2 JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0-rc.0/js/select2.min.js"></script>
+  
+  <script>
+    // Array of countries with their names, ISO codes, and dialing codes.
+    // This list is comprehensive to include most countries.
+    const countries = [
+      { name: "Afghanistan", code: "AF", dial_code: "+93" },
+      { name: "Åland Islands", code: "AX", dial_code: "+358" },
+      { name: "Albania", code: "AL", dial_code: "+355" },
+      { name: "Algeria", code: "DZ", dial_code: "+213" },
+      { name: "American Samoa", code: "AS", dial_code: "+1684" },
+      { name: "Andorra", code: "AD", dial_code: "+376" },
+      { name: "Angola", code: "AO", dial_code: "+244" },
+      { name: "Anguilla", code: "AI", dial_code: "+1264" },
+      { name: "Antarctica", code: "AQ", dial_code: "+672" },
+      { name: "Antigua and Barbuda", code: "AG", dial_code: "+1268" },
+      { name: "Argentina", code: "AR", dial_code: "+54" },
+      { name: "Armenia", code: "AM", dial_code: "+374" },
+      { name: "Aruba", code: "AW", dial_code: "+297" },
+      { name: "Australia", code: "AU", dial_code: "+61" },
+      { name: "Austria", code: "AT", dial_code: "+43" },
+      { name: "Azerbaijan", code: "AZ", dial_code: "+994" },
+      { name: "Bahamas", code: "BS", dial_code: "+1242" },
+      { name: "Bahrain", code: "BH", dial_code: "+973" },
+      { name: "Bangladesh", code: "BD", dial_code: "+880" },
+      { name: "Barbados", code: "BB", dial_code: "+1246" },
+      { name: "Belarus", code: "BY", dial_code: "+375" },
+      { name: "Belgium", code: "BE", dial_code: "+32" },
+      { name: "Belize", code: "BZ", dial_code: "+501" },
+      { name: "Benin", code: "BJ", dial_code: "+229" },
+      { name: "Bermuda", code: "BM", dial_code: "+1441" },
+      { name: "Bhutan", code: "BT", dial_code: "+975" },
+      { name: "Bolivia, Plurinational State of", code: "BO", dial_code: "+591" },
+      { name: "Bonaire, Sint Eustatius and Saba", code: "BQ", dial_code: "+599" },
+      { name: "Bosnia and Herzegovina", code: "BA", dial_code: "+387" },
+      { name: "Botswana", code: "BW", dial_code: "+267" },
+      { name: "Brazil", code: "BR", dial_code: "+55" },
+      { name: "British Indian Ocean Territory", code: "IO", dial_code: "+246" },
+      { name: "Brunei Darussalam", code: "BN", dial_code: "+673" },
+      { name: "Bulgaria", code: "BG", dial_code: "+359" },
+      { name: "Burkina Faso", code: "BF", dial_code: "+226" },
+      { name: "Burundi", code: "BI", dial_code: "+257" },
+      { name: "Cabo Verde", code: "CV", dial_code: "+238" },
+      { name: "Cambodia", code: "KH", dial_code: "+855" },
+      { name: "Cameroon", code: "CM", dial_code: "+237" },
+      { name: "Canada", code: "CA", dial_code: "+1" },
+      { name: "Cayman Islands", code: "KY", dial_code: "+1345" },
+      { name: "Central African Republic", code: "CF", dial_code: "+236" },
+      { name: "Chad", code: "TD", dial_code: "+235" },
+      { name: "Chile", code: "CL", dial_code: "+56" },
+      { name: "China", code: "CN", dial_code: "+86" },
+      { name: "Christmas Island", code: "CX", dial_code: "+61" },
+      { name: "Cocos (Keeling) Islands", code: "CC", dial_code: "+61" },
+      { name: "Colombia", code: "CO", dial_code: "+57" },
+      { name: "Comoros", code: "KM", dial_code: "+269" },
+      { name: "Congo", code: "CG", dial_code: "+242" },
+      { name: "Congo, The Democratic Republic of the", code: "CD", dial_code: "+243" },
+      { name: "Cook Islands", code: "CK", dial_code: "+682" },
+      { name: "Costa Rica", code: "CR", dial_code: "+506" },
+      { name: "Côte d'Ivoire", code: "CI", dial_code: "+225" },
+      { name: "Croatia", code: "HR", dial_code: "+385" },
+      { name: "Cuba", code: "CU", dial_code: "+53" },
+      { name: "Curaçao", code: "CW", dial_code: "+599" },
+      { name: "Cyprus", code: "CY", dial_code: "+357" },
+      { name: "Czechia", code: "CZ", dial_code: "+420" },
+      { name: "Denmark", code: "DK", dial_code: "+45" },
+      { name: "Djibouti", code: "DJ", dial_code: "+253" },
+      { name: "Dominica", code: "DM", dial_code: "+1767" },
+      { name: "Dominican Republic", code: "DO", dial_code: "+1809" },
+      { name: "Ecuador", code: "EC", dial_code: "+593" },
+      { name: "Egypt", code: "EG", dial_code: "+20" },
+      { name: "El Salvador", code: "SV", dial_code: "+503" },
+      { name: "Equatorial Guinea", code: "GQ", dial_code: "+240" },
+      { name: "Eritrea", code: "ER", dial_code: "+291" },
+      { name: "Estonia", code: "EE", dial_code: "+372" },
+      { name: "Eswatini", code: "SZ", dial_code: "+268" },
+      { name: "Ethiopia", code: "ET", dial_code: "+251" },
+      { name: "Falkland Islands (Malvinas)", code: "FK", dial_code: "+500" },
+      { name: "Faroe Islands", code: "FO", dial_code: "+298" },
+      { name: "Fiji", code: "FJ", dial_code: "+679" },
+      { name: "Finland", code: "FI", dial_code: "+358" },
+      { name: "France", code: "FR", dial_code: "+33" },
+      { name: "French Guiana", code: "GF", dial_code: "+594" },
+      { name: "French Polynesia", code: "PF", dial_code: "+689" },
+      { name: "Gabon", code: "GA", dial_code: "+241" },
+      { name: "Gambia", code: "GM", dial_code: "+220" },
+      { name: "Georgia", code: "GE", dial_code: "+995" },
+      { name: "Germany", code: "DE", dial_code: "+49" },
+      { name: "Ghana", code: "GH", dial_code: "+233" },
+      { name: "Gibraltar", code: "GI", dial_code: "+350" },
+      { name: "Greece", code: "GR", dial_code: "+30" },
+      { name: "Greenland", code: "GL", dial_code: "+299" },
+      { name: "Grenada", code: "GD", dial_code: "+1473" },
+      { name: "Guadeloupe", code: "GP", dial_code: "+590" },
+      { name: "Guam", code: "GU", dial_code: "+1671" },
+      { name: "Guatemala", code: "GT", dial_code: "+502" },
+      { name: "Guernsey", code: "GG", dial_code: "+44" },
+      { name: "Guinea", code: "GN", dial_code: "+224" },
+      { name: "Guinea-Bissau", code: "GW", dial_code: "+245" },
+      { name: "Guyana", code: "GY", dial_code: "+592" },
+      { name: "Haiti", code: "HT", dial_code: "+509" },
+      { name: "Holy See (Vatican City State)", code: "VA", dial_code: "+379" },
+      { name: "Honduras", code: "HN", dial_code: "+504" },
+      { name: "Hong Kong", code: "HK", dial_code: "+852" },
+      { name: "Hungary", code: "HU", dial_code: "+36" },
+      { name: "Iceland", code: "IS", dial_code: "+354" },
+      { name: "India", code: "IN", dial_code: "+91" },
+      { name: "Indonesia", code: "ID", dial_code: "+62" },
+      { name: "Iran, Islamic Republic of", code: "IR", dial_code: "+98" },
+      { name: "Iraq", code: "IQ", dial_code: "+964" },
+      { name: "Ireland", code: "IE", dial_code: "+353" },
+      { name: "Isle of Man", code: "IM", dial_code: "+44" },
+      { name: "Israel", code: "IL", dial_code: "+972" },
+      { name: "Italy", code: "IT", dial_code: "+39" },
+      { name: "Jamaica", code: "JM", dial_code: "+1876" },
+      { name: "Japan", code: "JP", dial_code: "+81" },
+      { name: "Jersey", code: "JE", dial_code: "+44" },
+      { name: "Jordan", code: "JO", dial_code: "+962" },
+      { name: "Kazakhstan", code: "KZ", dial_code: "+7" },
+      { name: "Kenya", code: "KE", dial_code: "+254" },
+      { name: "Kiribati", code: "KI", dial_code: "+686" },
+      { name: "Korea, Democratic People's Republic of", code: "KP", dial_code: "+850" },
+      { name: "Korea, Republic of", code: "KR", dial_code: "+82" },
+      { name: "Kuwait", code: "KW", dial_code: "+965" },
+      { name: "Kyrgyzstan", code: "KG", dial_code: "+996" },
+      { name: "Lao People's Democratic Republic", code: "LA", dial_code: "+856" },
+      { name: "Latvia", code: "LV", dial_code: "+371" },
+      { name: "Lebanon", code: "LB", dial_code: "+961" },
+      { name: "Lesotho", code: "LS", dial_code: "+266" },
+      { name: "Liberia", code: "LR", dial_code: "+231" },
+      { name: "Libya", code: "LY", dial_code: "+218" },
+      { name: "Liechtenstein", code: "LI", dial_code: "+423" },
+      { name: "Lithuania", code: "LT", dial_code: "+370" },
+      { name: "Luxembourg", code: "LU", dial_code: "+352" },
+      { name: "Macao", code: "MO", dial_code: "+853" },
+      { name: "Madagascar", code: "MG", dial_code: "+261" },
+      { name: "Malawi", code: "MW", dial_code: "+265" },
+      { name: "Malaysia", code: "MY", dial_code: "+60" },
+      { name: "Maldives", code: "MV", dial_code: "+960" },
+      { name: "Mali", code: "ML", dial_code: "+223" },
+      { name: "Malta", code: "MT", dial_code: "+356" },
+      { name: "Marshall Islands", code: "MH", dial_code: "+692" },
+      { name: "Martinique", code: "MQ", dial_code: "+596" },
+      { name: "Mauritania", code: "MR", dial_code: "+222" },
+      { name: "Mauritius", code: "MU", dial_code: "+230" },
+      { name: "Mayotte", code: "YT", dial_code: "+262" },
+      { name: "Mexico", code: "MX", dial_code: "+52" },
+      { name: "Micronesia, Federated States of", code: "FM", dial_code: "+691" },
+      { name: "Moldova, Republic of", code: "MD", dial_code: "+373" },
+      { name: "Monaco", code: "MC", dial_code: "+377" },
+      { name: "Mongolia", code: "MN", dial_code: "+976" },
+      { name: "Montenegro", code: "ME", dial_code: "+382" },
+      { name: "Montserrat", code: "MS", dial_code: "+1664" },
+      { name: "Morocco", code: "MA", dial_code: "+212" },
+      { name: "Mozambique", code: "MZ", dial_code: "+258" },
+      { name: "Myanmar", code: "MM", dial_code: "+95" },
+      { name: "Namibia", code: "NA", dial_code: "+264" },
+      { name: "Nauru", code: "NR", dial_code: "+674" },
+      { name: "Nepal", code: "NP", dial_code: "+977" },
+      { name: "Netherlands", code: "NL", dial_code: "+31" },
+      { name: "New Caledonia", code: "NC", dial_code: "+687" },
+      { name: "New Zealand", code: "NZ", dial_code: "+64" },
+      { name: "Nicaragua", code: "NI", dial_code: "+505" },
+      { name: "Niger", code: "NE", dial_code: "+227" },
+      { name: "Nigeria", code: "NG", dial_code: "+234" },
+      { name: "Niue", code: "NU", dial_code: "+683" },
+      { name: "Norfolk Island", code: "NF", dial_code: "+672" },
+      { name: "North Macedonia", code: "MK", dial_code: "+389" },
+      { name: "Northern Mariana Islands", code: "MP", dial_code: "+1670" },
+      { name: "Norway", code: "NO", dial_code: "+47" },
+      { name: "Oman", code: "OM", dial_code: "+968" },
+      { name: "Pakistan", code: "PK", dial_code: "+92" },
+      { name: "Palau", code: "PW", dial_code: "+680" },
+      { name: "Palestine, State of", code: "PS", dial_code: "+970" },
+      { name: "Panama", code: "PA", dial_code: "+507" },
+      { name: "Papua New Guinea", code: "PG", dial_code: "+675" },
+      { name: "Paraguay", code: "PY", dial_code: "+595" },
+      { name: "Peru", code: "PE", dial_code: "+51" },
+      { name: "Philippines", code: "PH", dial_code: "+63" },
+      { name: "Pitcairn", code: "PN", dial_code: "+64" },
+      { name: "Poland", code: "PL", dial_code: "+48" },
+      { name: "Portugal", code: "PT", dial_code: "+351" },
+      { name: "Puerto Rico", code: "PR", dial_code: "+1939" },
+      { name: "Qatar", code: "QA", dial_code: "+974" },
+      { name: "Réunion", code: "RE", dial_code: "+262" },
+      { name: "Romania", code: "RO", dial_code: "+40" },
+      { name: "Russian Federation", code: "RU", dial_code: "+7" },
+      { name: "Rwanda", code: "RW", dial_code: "+250" },
+      { name: "Saint Barthélemy", code: "BL", dial_code: "+590" },
+      { name: "Saint Helena, Ascension and Tristan da Cunha", code: "SH", dial_code: "+290" },
+      { name: "Saint Kitts and Nevis", code: "KN", dial_code: "+1869" },
+      { name: "Saint Lucia", code: "LC", dial_code: "+1758" },
+      { name: "Saint Martin (French part)", code: "MF", dial_code: "+590" },
+      { name: "Saint Pierre and Miquelon", code: "PM", dial_code: "+508" },
+      { name: "Saint Vincent and the Grenadines", code: "VC", dial_code: "+1784" },
+      { name: "Samoa", code: "WS", dial_code: "+685" },
+      { name: "San Marino", code: "SM", dial_code: "+378" },
+      { name: "Sao Tome and Principe", code: "ST", dial_code: "+239" },
+      { name: "Saudi Arabia", code: "SA", dial_code: "+966" },
+      { name: "Senegal", code: "SN", dial_code: "+221" },
+      { name: "Serbia", code: "RS", dial_code: "+381" },
+      { name: "Seychelles", code: "SC", dial_code: "+248" },
+      { name: "Sierra Leone", code: "SL", dial_code: "+232" },
+      { name: "Singapore", code: "SG", dial_code: "+65" },
+      { name: "Sint Maarten (Dutch part)", code: "SX", dial_code: "+1721" },
+      { name: "Slovakia", code: "SK", dial_code: "+421" },
+      { name: "Slovenia", code: "SI", dial_code: "+386" },
+      { name: "Solomon Islands", code: "SB", dial_code: "+677" },
+      { name: "Somalia", code: "SO", dial_code: "+252" },
+      { name: "South Africa", code: "ZA", dial_code: "+27" },
+      { name: "South Georgia and the South Sandwich Islands", code: "GS", dial_code: "+500" },
+      { name: "South Sudan", code: "SS", dial_code: "+211" },
+      { name: "Spain", code: "ES", dial_code: "+34" },
+      { name: "Sri Lanka", code: "LK", dial_code: "+94" },
+      { name: "Sudan", code: "SD", dial_code: "+249" },
+      { name: "Suriname", code: "SR", dial_code: "+597" },
+      { name: "Svalbard and Jan Mayen", code: "SJ", dial_code: "+47" },
+      { name: "Sweden", code: "SE", dial_code: "+46" },
+      { name: "Switzerland", code: "CH", dial_code: "+41" },
+      { name: "Syrian Arab Republic", code: "SY", dial_code: "+963" },
+      { name: "Taiwan, Province of China", code: "TW", dial_code: "+886" },
+      { name: "Tajikistan", code: "TJ", dial_code: "+992" },
+      { name: "Tanzania, United Republic of", code: "TZ", dial_code: "+255" },
+      { name: "Thailand", code: "TH", dial_code: "+66" },
+      { name: "Timor-Leste", code: "TL", dial_code: "+670" },
+      { name: "Togo", code: "TG", dial_code: "+228" },
+      { name: "Tokelau", code: "TK", dial_code: "+690" },
+      { name: "Tonga", code: "TO", dial_code: "+676" },
+      { name: "Trinidad and Tobago", code: "TT", dial_code: "+1868" },
+      { name: "Tunisia", code: "TN", dial_code: "+216" },
+      { name: "Turkey", code: "TR", dial_code: "+90" },
+      { name: "Turkmenistan", code: "TM", dial_code: "+993" },
+      { name: "Turks and Caicos Islands", code: "TC", dial_code: "+1649" },
+      { name: "Tuvalu", code: "TV", dial_code: "+688" },
+      { name: "Uganda", code: "UG", dial_code: "+256" },
+      { name: "Ukraine", code: "UA", dial_code: "+380" },
+      { name: "United Arab Emirates", code: "AE", dial_code: "+971" },
+      { name: "United Kingdom", code: "GB", dial_code: "+44" },
+      { name: "United States", code: "US", dial_code: "+1" },
+      { name: "United States Minor Outlying Islands", code: "UM", dial_code: "+1" },
+      { name: "Uruguay", code: "UY", dial_code: "+598" },
+      { name: "Uzbekistan", code: "UZ", dial_code: "+998" },
+      { name: "Vanuatu", code: "VU", dial_code: "+678" },
+      { name: "Venezuela, Bolivarian Republic of", code: "VE", dial_code: "+58" },
+      { name: "Viet Nam", code: "VN", dial_code: "+84" },
+      { name: "Virgin Islands, British", code: "VG", dial_code: "+1284" },
+      { name: "Virgin Islands, U.S.", code: "VI", dial_code: "+1340" },
+      { name: "Wallis and Futuna", code: "WF", dial_code: "+681" },
+      { name: "Western Sahara", code: "EH", dial_code: "+212" },
+      { name: "Yemen", code: "YE", dial_code: "+967" },
+      { name: "Zambia", code: "ZM", dial_code: "+260" },
+      { name: "Zimbabwe", code: "ZW", dial_code: "+263" }
+    ];
+
+    // Function to format the option for Select2 results
+    function formatCountry(country) {
+      if (!country.id) {
+        return country.text; // Return the text for placeholders
+      }
+
+      // Get country data from the 'countries' array based on the value (country code)
+      const countryData = countries.find(c => c.code === $(country.element).val());
+
+      if (!countryData) {
+        return country.text; // Fallback if data not found
+      }
+
+      // Construct the HTML for the dropdown item
+      const $country = $(
+        `<span>
+                      <img src="https://flagcdn.com/w20/${countryData.code.toLowerCase()}.png" class="flag-icon" />
+                      ${countryData.name} (${countryData.dial_code})
+                  </span>`
+      );
+      return $country;
+    }
+
+    // Initialize Select2 on the country-selector element
+    $(document).ready(function () {
+      const $countrySelector = $('#country-selector');
+      const $selectedDialCode = $('#selected-dial-code');
+
+      // Populate the select dropdown with options
+      countries.forEach(country => {
+        const option = new Option(country.name, country.code, false, false);
+        $(option).data('dial_code', country.dial_code); // Store dial code in data attribute
+        $countrySelector.append(option);
+      });
+
+      // Initialize Select2
+      $countrySelector.select2({
+        placeholder: 'Select a country',
+        templateResult: formatCountry, // Function to format dropdown results
+        templateSelection: formatCountry, // Function to format selected item
+        width: 'resolve', // Adjust width to content
+        dropdownAutoWidth: true, // Automatically adjust dropdown width
+        // Enable searching
+        minimumResultsForSearch: 1 // Show search box even if only one result
+      });
+
+      // Set a default selected value (e.g., United States)
+      $countrySelector.val('US').trigger('change');
+
+      // Update the display for the selected dialing code when the selection changes
+      $countrySelector.on('change', function () {
+        const selectedCode = $(this).val();
+        const selectedCountry = countries.find(c => c.code === selectedCode);
+        if (selectedCountry) {
+          $selectedDialCode.text(selectedCountry.dial_code);
+        } else {
+          $selectedDialCode.text('N/A'); // Fallback
+        }
+      });
+
+      // Initial update of the displayed dial code
+      const initialSelectedCountry = countries.find(c => c.code === $countrySelector.val());
+      if (initialSelectedCountry) {
+        $selectedDialCode.text(initialSelectedCountry.dial_code);
+      }
+    });
+  </script>
+  <style data-rc-order="prepend" rc-util-key="@ant-design-icons">
+    .anticon {
+      display: inline-block;
+      color: inherit;
+      font-style: normal;
+      line-height: 0;
+      text-align: center;
+      text-transform: none;
+      vertical-align: -0.125em;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .anticon>* {
+      line-height: 1;
+    }
+
+    .anticon svg {
+      display: inline-block;
+    }
+
+    .anticon::before {
+      display: none;
+    }
+
+    .anticon .anticon-icon {
+      display: block;
+    }
+
+    .anticon[tabindex] {
+      cursor: pointer;
+    }
+
+    .anticon-spin::before,
+    .anticon-spin {
+      display: inline-block;
+      -webkit-animation: loadingCircle 1s infinite linear;
+      animation: loadingCircle 1s infinite linear;
+    }
+
+    @-webkit-keyframes loadingCircle {
+      100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes loadingCircle {
+      100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+  <meta charset="utf-8">
+  <title>Log In | Bybit</title>
+  <meta http-equiv="x-dns-prefetch-control" content="on">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1, minimum-scale=1, maximum-scale=1">
+  <meta name="robots" content="index,follow">
+  <meta name="description"
+    content="Log in to kick-start your crypto journey, level up your trading experience and earn crypto rewards. Unlock limitless crypto opportunities reliably.">
+  <meta name="keywords" content="Log In | Bybit">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Log In | Bybit">
+  <meta property="og:description"
+    content="Log in to kick-start your crypto journey, level up your trading experience and earn crypto rewards. Unlock limitless crypto opportunities reliably.">
+  <meta property="og:url" content="https://www.bybit.com/en/login">
+  <meta hid="og:locale" property="og:locale" content="en">
+  <meta property="twitter:title" content="Log In | Bybit">
+  <meta property="twitter:description"
+    content="Log in to kick-start your crypto journey, level up your trading experience and earn crypto rewards. Unlock limitless crypto opportunities reliably.">
+  <meta name="yandex-verification" content="562817e58c38d16a">
+  <meta name="google-site-verification" content="cimlT5XFEqGBsSVh8XQe9sP-l8Z0mZ6UpeYSt612aHw">
+  <meta name="naver-site-verification" content="520acf3890720b693406a160ba60807d6c9741c1">
+  <meta name="baidu-site-verification" content="YMDABwHltA">
+  <meta hid="og:locale:alternate-zh-TW" property="og:locale:alternate" content="zh_TW">
+  <meta hid="og:locale:alternate-ja-JP" property="og:locale:alternate" content="ja_JP">
+  <meta hid="og:locale:alternate-ko-KR" property="og:locale:alternate" content="ko_KR">
+  <meta hid="og:locale:alternate-ru-RU" property="og:locale:alternate" content="ru_RU">
+  <meta hid="og:locale:alternate-es-ES" property="og:locale:alternate" content="es_ES">
+  <meta hid="og:locale:alternate-vi-VN" property="og:locale:alternate" content="vi_VN">
+  <meta hid="og:locale:alternate-pt-BR" property="og:locale:alternate" content="pt_BR">
+  <meta hid="og:locale:alternate-pt-PT" property="og:locale:alternate" content="pt_PT">
+  <meta hid="og:locale:alternate-id-ID" property="og:locale:alternate" content="id_ID">
+  <meta hid="og:locale:alternate-kk-KZ" property="og:locale:alternate" content="kk_KZ">
+  <meta hid="og:locale:alternate-tl" property="og:locale:alternate" content="tl">
+  <meta hid="og:locale:alternate-uk-UA" property="og:locale:alternate" content="uk_UA">
+  <meta hid="og:locale:alternate-ar-SA" property="og:locale:alternate" content="ar_SA">
+  <meta hid="og:locale:alternate-es-MX" property="og:locale:alternate" content="es_MX">
+  <meta hid="og:locale:alternate-es-AR" property="og:locale:alternate" content="es_AR">
+  <meta hid="og:locale:alternate-zh-MY" property="og:locale:alternate" content="zh_MY">
+  <meta hid="og:locale:alternate-zh-HK" property="og:locale:alternate" content="zh_HK">
+  <meta hid="og:locale:alternate-en-HK" property="og:locale:alternate" content="en_HK">
+  <meta hid="og:locale:alternate-nl-NL" property="og:locale:alternate" content="nl_NL">
+  <meta hid="og:locale:alternate-pl-PL" property="og:locale:alternate" content="pl_PL">
+  <meta hid="og:locale:alternate-en" property="og:locale:alternate" content="en">
+  <meta hid="og:locale:alternate-en-NL" property="og:locale:alternate" content="en_NL">
+  <meta hid="og:locale:alternate-ro-RO" property="og:locale:alternate" content="ro_RO">
+  <meta hid="og:locale:alternate-en-TR" property="og:locale:alternate" content="en_TR">
+  <meta hid="og:locale:alternate-tr-TUR" property="og:locale:alternate" content="tr_TUR">
+  <meta hid="og:locale:alternate-pl-EU" property="og:locale:alternate" content="pl_EU">
+  <meta hid="og:locale:alternate-ro-EU" property="og:locale:alternate" content="ro_EU">
+  <meta hid="og:locale:alternate-es-EU" property="og:locale:alternate" content="es_EU">
+  <meta hid="og:locale:alternate-pt-EU" property="og:locale:alternate" content="pt_EU">
+  <meta hid="og:locale:alternate-fr-EU" property="og:locale:alternate" content="fr_EU">
+  <meta hid="og:locale:alternate-it-EU" property="og:locale:alternate" content="it_EU">
+  <meta hid="og:locale:alternate-en-ARE" property="og:locale:alternate" content="en_ARE">
+  <meta hid="og:locale:alternate-ar-ARE" property="og:locale:alternate" content="ar_ARE">
+  <meta hid="og:locale:alternate-en-IN" property="og:locale:alternate" content="en_IN">
+  <meta hid="og:locale:alternate-en-NG" property="og:locale:alternate" content="en_NG">
+  <meta property="og:image" content="https://fh-static.bycsi.com/images/home/official-image.png">
+  <meta property="twitter:image" content="https://fh-static.bycsi.com/images/home/official-image.png">
+  <meta name="image" content="https://fh-static.bycsi.com/images/home/official-image.png">
+  <meta property="twitter:card" content="summary_large_image">
+  <link rel="dns-prefetch" href="//api2.bybit.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link rel="preload" crossorigin="anonymous" href="/common-static/cht-static/user-svc/img/register/bybitLogo.png"
+    as="image">
+  <link rel="preload" crossorigin="anonymous" href="/common-static/cht-static/user-svc/img/register/smallStar.png"
+    as="image">
+  <link rel="canonical" href="https://www.bybit.com/en/login">
+  <link rel="alternate" href="https://www.bybit.com/en/login" hreflang="x-default">
+  <link rel="alternate" href="https://www.bybit.com/en/login" hreflang="en">
+  <link rel="alternate" href="https://www.bybit.com/es-ES/login" hreflang="es-ES">
+  <link rel="alternate" href="https://www.bybit.com/es-419/login" hreflang="es">
+  <link rel="alternate" href="https://www.bybit.com/es-MX/login" hreflang="es-MX">
+  <link rel="alternate" href="https://www.bybit.com/es-AR/login" hreflang="es-AR">
+  <link rel="alternate" href="https://www.bybit.com/pl-PL/login" hreflang="pl-PL">
+  <link rel="alternate" href="https://www.bybit.com/pt-BR/login" hreflang="pt-BR">
+  <link rel="alternate" href="https://www.bybit.com/pt-PT/login" hreflang="pt-PT">
+  <link rel="alternate" href="https://www.bybit.com/ro-RO/login" hreflang="ro-RO">
+  <link rel="alternate" href="https://www.bybit.com/vi-VN/login" hreflang="vi-VN">
+  <link rel="alternate" href="https://www.bybit.com/ja-JP/login" hreflang="ja-JP">
+  <link rel="alternate" href="https://www.bybit.com/zh-TW/login" hreflang="zh-TW">
+  <link rel="alternate" href="https://www.bybit.com/kk-KZ/login" hreflang="kk-KZ">
+  <link rel="alternate" href="https://www.bybit.com/ru-RU/login" hreflang="ru-RU">
+  <link rel="alternate" href="https://www.bybit.com/uk-UA/login" hreflang="uk-UA">
+  <link rel="alternate" href="https://www.bybit.com/ar-SA/login" hreflang="ar-SA">
+  <link rel="alternate" href="https://www.bybitglobal.com/zh-MY/login" hreflang="zh-MY">
+  <link rel="alternate" href="https://www.bybitglobal.com/en/login" hreflang="en-IN">
+  <link rel="alternate" href="https://www.bybitglobal.com/en/login" hreflang="en-NG">
+  <link rel="alternate" href="https://www.bybitglobal.com/en/login" hreflang="en-MY">
+  <link rel="alternate" href="https://www.bybitglobal.com/fil-PH/login" hreflang="tl">
+  <link rel="alternate" href="https://www.bybitglobal.com/th-TH/login" hreflang="th-TH">
+  <link rel="alternate" href="https://www.bybit.nl/nl-NL/login" hreflang="nl-NL">
+  <link rel="alternate" href="https://www.bybit.nl/en-NL/login" hreflang="en-NL">
+  <link rel="alternate" href="https://www.bybit-tr.com/tr-TUR/login" hreflang="tr-TR">
+  <link rel="alternate" href="https://www.bybit-tr.com/en-TR/login" hreflang="en-TR">
+  <link rel="alternate" href="https://www.bybit-global.com/id-ID/login" hreflang="id-ID">
+  <meta name="next-head-count" content="90">
+  <link rel="preload" href="/common-static/fhs/IBMPlexSans-Regular-ba21ef1a37ee6d15eef777aedf368543.woff2" as="font"
+    type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/common-static/fhs/IBMPlexSans-Medium-64bcd7ec4d98272dc80e04b6d3bf8268.woff2" as="font"
+    type="font/woff2" crossorigin="anonymous">
+  <link rel="preload" href="/common-static/fhs/IBMPlexSans-SemiBold-6aca88931d6e2e67452aa4ac5f61f29d.woff2" as="font"
+    type="font/woff2" crossorigin="anonymous">
+  <meta charset="utf-8">
+  <script type="text/javascript" async src="./scripts/identify_0080b357.js"></script>
+  <script type="text/javascript" async src="./scripts/main.MTZlMzY3OTI3OQ.js" data-id="CMEEMQRC77UBHLCRLFPG"></script>
+  <script async src="./scripts/abtest-0.1.5.min.js"></script>
+  <script type="text/javascript" async src="./scripts/insight.min.js"></script>
+  <script type="text/javascript" async src="./scripts/events.js"></script>
+  <script async src="./scripts/uwt.js"></script>
+  <script src="/signals/config/454752076119925" async></script>
+  <script async src="./scripts/fbevents.js"></script>
+  <script type="text/javascript" async src="/gtag/js"></script>
+  <script async src="./scripts/gtm.js"></script>
+  <script src="./scripts/monitor.latest.js"></script>
+  <script src="./scripts/data-core.latest.min.js"></script>
+  <script src="./scripts/uniframe.js"></script>
+  <script src="./scripts/uniframe.js"></script>
+  <script src="./scripts/marvel-root-sw-loader.js"></script>
+  <script src="./scripts/login-entry-fe.js"></script>
+  <script src="./scripts/gt.js"></script>
+  <script src="./scripts/gt4.js"></script>
+  <script>function addClass(className) {
+      document.documentElement.classList.add(className);
+    }
+    var avif = new Image();
+    avif.src =
+      "data:image/avif;base64,AAAAIGZ0eXBhdmlmAAAAAGF2aWZtaWYxbWlhZk1BMUIAAADybWV0YQAAAAAAAAAoaGRscgAAAAAAAAAAcGljdAAAAAAAAAAAAAAAAGxpYmF2aWYAAAAADnBpdG0AAAAAAAEAAAAeaWxvYwAAAABEAAABAAEAAAABAAABGgAAAB0AAAAoaWluZgAAAAAAAQAAABppbmZlAgAAAAABAABhdjAxQ29sb3IAAAAAamlwcnAAAABLaXBjbwAAABRpc3BlAAAAAAAAAAIAAAACAAAAEHBpeGkAAAAAAwgICAAAAAxhdjFDgQ0MAAAAABNjb2xybmNseAACAAIAAYAAAAAXaXBtYQAAAAAAAAABAAEEAQKDBAAAACVtZGF0EgAKCBgANogQEAwgMg8f8D///8WfhwB8+ErK42A=";
+    avif.onload = function () {
+      addClass("avifok");
+    };</script>
+  <script>
+    var isWebp = document.createElement("canvas").toDataURL("image/webp").includes("data:image/webp");
+    if (isWebp) {
+      document.documentElement.classList.add("webpok");
+    }
+  </script>
+  <link rel="preload" href="/login-entry/_next/static/css/34ded42afe7607b3.css" as="style">
+  <link rel="stylesheet" href="./styles/34ded42afe7607b3.css" data-n-g="">
+  <link rel="preload" href="/login-entry/_next/static/css/17bc2bdc0600a9c3.css" as="style">
+  <link rel="stylesheet" href="./styles/17bc2bdc0600a9c3.css" data-n-p="">
+  <link rel="preload" href="/login-entry/_next/static/css/a41bbc994ddcf7b3.css" as="style">
+  <link rel="stylesheet" href="./styles/a41bbc994ddcf7b3.css" data-n-p=""><noscript data-n-css=""></noscript>
+  <script defer nomodule src="./scripts/polyfills-c67a75d1b6f99dc8.js"></script>
+
+  
+  <script src="./scripts/webpack-5d3897e566c38955.js" defer></script>
+  <script src="./scripts/framework-d583295f3144c491.js" defer></script>
+  <script src="./scripts/main-b7c6baa9246d43f1.js" defer></script>
+  <script src="./scripts/_app-0d0d648527c49b27.js" defer></script>
+  <script src="./scripts/3359-5b68eee4a54ad1c8.js" defer></script>
+  <script src="./scripts/9117-b757d41b5f939994.js" defer></script>
+  <script src="./scripts/3019-eef92ede0e8398f7.js" defer></script>
+  <script src="./scripts/5092-a3b29707c8314df4.js" defer></script>
+  <script src="./scripts/4200-5f13a598ee7496e1.js" defer></script>
+  <script src="./scripts/761-89ec33275d93328b.js" defer></script>
+  <script src="./scripts/8867-aa94082316432357.js" defer></script>
+  <script src="./scripts/1325-4424005068f67a56.js" defer></script>
+  <script src="./scripts/7817-828f9d7eda370127.js" defer></script>
+  <script src="./scripts/2822-0852015e66bdb5ce.js" defer></script>
+  <script src="./scripts/5275-9da94f0ae0a86024.js" defer></script>
+  <script src="./scripts/login-2b4492a61713749f.js" defer></script>
+  <script src="./scripts/_buildManifest.js" defer></script>
+  <script src="./scripts/_ssgManifest.js" defer></script>
+
+
+  <style data-emotion="css" data-s=""></style>
+  <script src="./scripts/finger_device.js"></script>
+  <script src="./scripts/react.18.2.0.min-860f1d37ec17b010c94069b99a49ae7b.js"></script>
+  <style id="googleidentityservice_button_styles" nonce="undefined">
+    .qJTHM {
+      -webkit-user-select: none;
+      color: #202124;
+      direction: ltr;
+      -webkit-touch-callout: none;
+      font-family: "Roboto-Regular", arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      font-weight: 400;
+      margin: 0;
+      overflow: hidden;
+      -webkit-text-size-adjust: 100%
+    }
+
+    .ynRLnc {
+      left: -9999px;
+      position: absolute;
+      top: -9999px
+    }
+
+    .L6cTce {
+      display: none
+    }
+
+    .bltWBb {
+      word-break: break-all
+    }
+
+    .hSRGPd {
+      color: #1a73e8;
+      cursor: pointer;
+      font-weight: 500;
+      text-decoration: none
+    }
+
+    .Bz112c-W3lGp {
+      height: 16px;
+      width: 16px
+    }
+
+    .Bz112c-E3DyYd {
+      height: 20px;
+      width: 20px
+    }
+
+    .Bz112c-r9oPif {
+      height: 24px;
+      width: 24px
+    }
+
+    .Bz112c-r4WDKb {
+      height: 42px;
+      width: 42px
+    }
+
+    .Bz112c-uaxL4e {
+      -webkit-border-radius: 10px;
+      border-radius: 10px
+    }
+
+    .LgbsSe-Bz112c {
+      display: block
+    }
+
+    .S9gUrf-YoZ4jf,
+    .S9gUrf-YoZ4jf * {
+      border: none;
+      margin: 0;
+      padding: 0
+    }
+
+    .fFW7wc-ibnC6b>.aZ2wEe>div {
+      border-color: #4285f4
+    }
+
+    .P1ekSe-ZMv3u>div:nth-child(1) {
+      background-color: #1a73e8 !important
+    }
+
+    .P1ekSe-ZMv3u>div:nth-child(2),
+    .P1ekSe-ZMv3u>div:nth-child(3) {
+      background-image: linear-gradient(to right, rgba(255, 255, 255, .7), rgba(255, 255, 255, .7)), linear-gradient(to right, #1a73e8, #1a73e8) !important
+    }
+
+    .haAclf {
+      display: inline-block
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe {
+      -webkit-border-radius: 4px;
+      border-radius: 4px;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      -webkit-transition: background-color .218s, border-color .218s;
+      transition: background-color .218s, border-color .218s;
+      -webkit-user-select: none;
+      -webkit-appearance: none;
+      background-color: #fff;
+      background-image: none;
+      border: 1px solid #dadce0;
+      color: #3c4043;
+      cursor: pointer;
+      font-family: "Google Sans", arial, sans-serif;
+      font-size: 14px;
+      height: 40px;
+      letter-spacing: 0.25px;
+      outline: none;
+      overflow: hidden;
+      padding: 0 12px;
+      position: relative;
+      text-align: center;
+      vertical-align: middle;
+      white-space: nowrap;
+      width: auto
+    }
+
+    @media screen and (-ms-high-contrast:active) {
+      .nsm7Bb-HzV7m-LgbsSe {
+        border: 2px solid windowText;
+        color: windowText
+      }
+    }
+
+    @media screen and (preferes-contrast:more) {
+      .nsm7Bb-HzV7m-LgbsSe {
+        color: #000
+      }
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe {
+      font-size: 14px;
+      height: 32px;
+      letter-spacing: 0.25px;
+      padding: 0 10px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe {
+      font-size: 11px;
+      height: 20px;
+      letter-spacing: 0.3px;
+      padding: 0 8px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe {
+      padding: 0;
+      width: 40px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.pSzOP-SxQuSe {
+      width: 32px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.purZT-SxQuSe {
+      width: 20px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK {
+      -webkit-border-radius: 20px;
+      border-radius: 20px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK.pSzOP-SxQuSe {
+      -webkit-border-radius: 16px;
+      border-radius: 16px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK.purZT-SxQuSe {
+      -webkit-border-radius: 10px;
+      border-radius: 10px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc {
+      border: none;
+      color: #fff
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.MFS4be-v3pZbf-Ia7Qfc {
+      background-color: #1a73e8
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.MFS4be-JaPV2b-Ia7Qfc {
+      background-color: #202124;
+      color: #e8eaed
+    }
+
+    @media screen and (prefers-contrast:more) {
+      .nsm7Bb-HzV7m-LgbsSe.MFS4be-JaPV2b-Ia7Qfc {
+        color: #fff
+      }
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c {
+      height: 18px;
+      margin-right: 8px;
+      min-width: 18px;
+      width: 18px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c {
+      height: 14px;
+      min-width: 14px;
+      width: 14px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c {
+      height: 10px;
+      min-width: 10px;
+      width: 10px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-Bz112c {
+      margin-left: 8px;
+      margin-right: -4px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c {
+      margin: 0;
+      padding: 10px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c {
+      padding: 8px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c {
+      padding: 4px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf {
+      -webkit-border-top-left-radius: 3px;
+      border-top-left-radius: 3px;
+      -webkit-border-bottom-left-radius: 3px;
+      border-bottom-left-radius: 3px;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      justify-content: center;
+      -webkit-align-items: center;
+      align-items: center;
+      background-color: #fff;
+      height: 36px;
+      margin-left: -10px;
+      margin-right: 12px;
+      min-width: 36px;
+      width: 36px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf .nsm7Bb-HzV7m-LgbsSe-Bz112c,
+    .nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf .nsm7Bb-HzV7m-LgbsSe-Bz112c {
+      margin: 0;
+      padding: 0
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf {
+      height: 28px;
+      margin-left: -8px;
+      margin-right: 10px;
+      min-width: 28px;
+      width: 28px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf {
+      height: 16px;
+      margin-left: -6px;
+      margin-right: 8px;
+      min-width: 16px;
+      width: 16px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.Bz112c-LgbsSe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf {
+      -webkit-border-radius: 3px;
+      border-radius: 3px;
+      margin-left: 2px;
+      margin-right: 0;
+      padding: 0
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf {
+      -webkit-border-radius: 18px;
+      border-radius: 18px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.pSzOP-SxQuSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf {
+      -webkit-border-radius: 14px;
+      border-radius: 14px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf {
+      -webkit-border-radius: 8px;
+      border-radius: 8px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-bN97Pc-sM5MNb {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-align-items: center;
+      align-items: center;
+      -webkit-flex-direction: row;
+      flex-direction: row;
+      justify-content: space-between;
+      -webkit-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+      height: 100%;
+      position: relative;
+      width: 100%
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe .oXtfBe-l4eHX {
+      justify-content: center
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-BPrWId {
+      -webkit-flex-grow: 1;
+      flex-grow: 1;
+      font-family: "Google Sans", arial, sans-serif;
+      font-weight: 500;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      vertical-align: top
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.purZT-SxQuSe .nsm7Bb-HzV7m-LgbsSe-BPrWId {
+      font-weight: 300
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe .oXtfBe-l4eHX .nsm7Bb-HzV7m-LgbsSe-BPrWId {
+      -webkit-flex-grow: 0;
+      flex-grow: 0
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe .nsm7Bb-HzV7m-LgbsSe-MJoBVe {
+      -webkit-transition: background-color .218s;
+      transition: background-color .218s;
+      bottom: 0;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe:hover,
+    .nsm7Bb-HzV7m-LgbsSe:focus {
+      -webkit-box-shadow: none;
+      box-shadow: none;
+      border-color: rgb(210, 227, 252);
+      outline: none
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe:focus-within {
+      outline: 2px solid #00639b;
+      border-color: transparent
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe:hover .nsm7Bb-HzV7m-LgbsSe-MJoBVe {
+      background: rgba(66, 133, 244, .08)
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe:active .nsm7Bb-HzV7m-LgbsSe-MJoBVe,
+    .nsm7Bb-HzV7m-LgbsSe:focus .nsm7Bb-HzV7m-LgbsSe-MJoBVe {
+      background: rgba(66, 133, 244, .1)
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:hover .nsm7Bb-HzV7m-LgbsSe-MJoBVe {
+      background: rgba(255, 255, 255, .24)
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:active .nsm7Bb-HzV7m-LgbsSe-MJoBVe,
+    .nsm7Bb-HzV7m-LgbsSe.MFS4be-Ia7Qfc:focus .nsm7Bb-HzV7m-LgbsSe-MJoBVe {
+      background: rgba(255, 255, 255, .32)
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe .n1UuX-DkfjY {
+      -webkit-border-radius: 50%;
+      border-radius: 50%;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      height: 20px;
+      margin-left: -4px;
+      margin-right: 8px;
+      min-width: 20px;
+      width: 20px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId {
+      font-family: "Roboto";
+      font-size: 12px;
+      text-align: left
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .ssJRIf,
+    .nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff .fmcmS {
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-align-items: center;
+      align-items: center;
+      color: #5f6368;
+      fill: #5f6368;
+      font-size: 11px;
+      font-weight: 400
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.jVeSEe.MFS4be-Ia7Qfc .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff {
+      color: #e8eaed;
+      fill: #e8eaed
+    }
+
+    @media screen and (prefers-contrast:more) {
+
+      .nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff,
+      .nsm7Bb-HzV7m-LgbsSe.jVeSEe.MFS4be-Ia7Qfc .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff {
+        color: #000;
+        fill: #000
+      }
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-BPrWId .K4efff .Bz112c {
+      height: 18px;
+      margin: -3px -3px -3px 2px;
+      min-width: 18px;
+      width: 18px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.jVeSEe .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf {
+      -webkit-border-top-left-radius: 0;
+      border-top-left-radius: 0;
+      -webkit-border-bottom-left-radius: 0;
+      border-bottom-left-radius: 0;
+      -webkit-border-top-right-radius: 3px;
+      border-top-right-radius: 3px;
+      -webkit-border-bottom-right-radius: 3px;
+      border-bottom-right-radius: 3px;
+      margin-left: 12px;
+      margin-right: -10px
+    }
+
+    .nsm7Bb-HzV7m-LgbsSe.jVeSEe.JGcpL-RbRzK .nsm7Bb-HzV7m-LgbsSe-Bz112c-haAclf {
+      -webkit-border-radius: 18px;
+      border-radius: 18px
+    }
+
+    .L5Fo6c-sM5MNb {
+      border: 0;
+      display: block;
+      left: 0;
+      position: relative;
+      top: 0
+    }
+
+    .L5Fo6c-bF1uUb {
+      -webkit-border-radius: 4px;
+      border-radius: 4px;
+      bottom: 0;
+      cursor: pointer;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0
+    }
+
+    .L5Fo6c-bF1uUb:focus {
+      border: none;
+      outline: none
+    }
+
+    sentinel {}
+  </style>
+  <link id="googleidentityservice" type="text/css" media="all" href="/gsi/style" rel="stylesheet">
+  <meta http-equiv="origin-trial"
+    content="A8o5T4MyEkRZqLA9WeG2XTFdV5tsX2Prg85xyQ+RL1btVuybB1K/EQ+7JUsPK+J32oBMTnsoF9B4A+qTlL6efgQAAABweyJvcmlnaW4iOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb206NDQzIiwiZmVhdHVyZSI6IkZlZENtQnV0dG9uTW9kZSIsImV4cGlyeSI6MTc0NDY3NTIwMCwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ==">
+  <link id="googleidentityservice" type="text/css" media="all" href="/gsi/style" rel="stylesheet">
+  <meta http-equiv="origin-trial"
+    content="A8o5T4MyEkRZqLA9WeG2XTFdV5tsX2Prg85xyQ+RL1btVuybB1K/EQ+7JUsPK+J32oBMTnsoF9B4A+qTlL6efgQAAABweyJvcmlnaW4iOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb206NDQzIiwiZmVhdHVyZSI6IkZlZENtQnV0dG9uTW9kZSIsImV4cGlyeSI6MTc0NDY3NTIwMCwiaXNUaGlyZFBhcnR5Ijp0cnVlfQ==">
+  <style type="text/css">
+    @keyframes animate_dots {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        opacity: 0
+      }
+    }
+
+    @-webkit-keyframes animate_dots {
+      0% {
+        opacity: 1
+      }
+
+      to {
+        opacity: 0
+      }
+    }
+
+    .dot0,
+    .dot1 {
+      animation: animate_dots .9s infinite;
+      -moz-animation: animate_dots .9s infinite;
+      -webkit-animation: animate_dots .9s infinite;
+      -o-animation: animate_dots .9s infinite
+    }
+
+    .dot1 {
+      animation-delay: .2s;
+      -webkit-animation-delay: .2s
+    }
+
+    .dot2 {
+      animation: animate_dots .9s infinite;
+      -moz-animation: animate_dots .9s infinite;
+      -webkit-animation: animate_dots .9s infinite;
+      -o-animation: animate_dots .9s infinite;
+      animation-delay: .4s;
+      -webkit-animation-delay: .4s
+    }
+
+    .dots_item {
+      display: inline-block;
+      margin-right: 5px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #4886ff
+    }
+
+    .verify-icon {
+      position: absolute;
+      width: 100%;
+      margin-top: 70px;
+      text-align: center
+    }
+
+    .t-embed-loading {
+      width: 300px;
+      height: 230px
+    }
+
+    .t-embed-loading,
+    .t-inline-loading {
+      position: relative;
+      background-color: #fff
+    }
+
+    .t-embed-dots,
+    .t-inline-dots {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      margin-left: -22.5px;
+      margin-top: -5px
+    }
+
+    .t-embed-dot,
+    .t-inline-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 5px;
+      background: #4886ff
+    }
+
+    .t-mask {
+      width: 100%;
+      width: 100vw;
+      height: 100%;
+      height: 100vh;
+      position: fixed;
+      _position: absolute;
+      left: 0;
+      top: 0;
+      background: #000;
+      opacity: .5;
+      filter: progid:DXImageTransform.Microsoft.Alpha(opacity=50);
+      z-index: 2000000000
+    }
+  </style>
+  <style id="style-393812" type="text/css" ignore="true">
+    .tcaptcha-transform {
+      font-family: "Helvtical,microsoft yahei,sans-serif";
+      -webkit-background-size: 20% 20%;
+      -o-background-size: 20%;
+      background-size: 20%;
+      background-position: 50% 32%;
+      background-color: #fff;
+      -webkit-border-radius: .08rem;
+      border-radius: .08rem;
+      visibility: visible;
+      z-index: 2000000002;
+      overflow: hidden
+    }
+
+    .tcaptcha-transform.chrome-75 {
+      overflow: auto !important;
+      -webkit-border-radius: 0 !important;
+      border-radius: 0 !important
+    }
+
+    .tcaptcha-transform.dark-mode {
+      background-color: #232323
+    }
+
+    .tcaptcha-transform.dark-mode .ticons.show-icon {
+      color: #fff
+    }
+
+    .tcaptcha-transform .ticons {
+      position: absolute;
+      visibility: hidden;
+      z-index: -1
+    }
+
+    .tcaptcha-transform .ticons.show-icon {
+      z-index: 0;
+      visibility: visible
+    }
+
+    .tcaptcha-transform .transform-eh.show-icon {
+      z-index: -1
+    }
+
+    .tcaptcha-transform .ticon-refresh {
+      height: 64px;
+      width: 64px;
+      left: 0;
+      right: 0;
+      margin: 96px auto;
+      background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAAB4CAMAAAANIQqNAAABm1BMVEUAAAA9pf8Zif8chf8chf8dhv8chf8chf8chv8chf8chf8chf8chf8chf8fiP8chf8bhP8ehf8chf8Vif8chv8bhf8bhf8chf8bhf8chv8bhf8ah/8bhP8chf8chf8chf8dhf8chf8chf8bhf8dhv8chf8chf////8chf8chf8chv8dg/////8chf8chf8chv////8dhP8lhv8chv8chf////////8ahv9Xpf8bhf8bhf8bhv8bhf////////8bhP8giv////////8chP8bhf8chf////8bhv8chf////8chf////////8chP////////////////////////8chv/////////////7/f/J4v////////////////8fhf8chf/////6/P8miv9Amf+Gvv/x+P/j8P+o0f91tf9Knv8gh//q9P+z1//E3/++3f+Mwf9ssP9HnP85lf8zkv/2+v9jq/9apv9Qof8tj//9/v/O5f/I4v+72/+32P+w1f+Wx/99uv9xsv/d7f/X6f/S5/+q0v+gzP+ayf+jzv+pdUB1AAAAX3RSTlMAAgn9ZRHxxUi9+fLjrw6qNyDfBFI7hEXq0oocnm3003NqPk005tCMzcqkK8l3m2IgFgaTWVNBMf3XoF1UTGJBGNDFuZV+WyXtiVzbvLQnDgru4aWRbi8W9OzptJNnGRL7ICoAAAiSSURBVGjevJj5W5JBEMeHK0QOQUQLtZDK0kqz1LRS08zyqKye7nrmVbzAvNIsNbPL6s/O/b6yK8iZS59f2H2fgdl39jszu1DROKKt1c2uRs89N7P7nqfR1VzdGnXQf+FKKOL1cEY83kjoCpWUNnuFm3Pi9trbqET47C4bF4DNZfeRfvzXT3LBnLzuJ61YqpypL1l5+2pD2ZmAw0fkcwTOlDVcvV2ZGh5nlUWj+xOsOOaN+K2UAas/4j3GihO6ltB3niWV4WiQchCMhitZcr6Pjk5ts3r3QX9BahlUcaioPWr062XaddutVCBWe7dMy/q0fRjv7Bmnggk45Ya2B6kIgu1SNs4AKc5dNPboP0eFMZKMZSP0VKRyG5M7N0L7PBDuwcUHhRTdFjY5bv8nOVvsx9mkxSzQz/sNSf/z/OprYmCr++cu46izMWiCFvH+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) no-repeat;
+      -webkit-background-size: contain;
+      -o-background-size: contain;
+      background-size: contain
+    }
+
+    .tcaptcha-transform .transform-eicon {
+      top: 22px;
+      left: 8px;
+      width: 10px;
+      height: 10px;
+      border-style: solid;
+      border-width: 2px 2px 0 0;
+      border-color: #1a79ff;
+      -webkit-transform-origin: 75% 25% 0;
+      -moz-transform-origin: 75% 25% 0;
+      -ms-transform-origin: 75% 25% 0;
+      -o-transform-origin: 75% 25% 0;
+      transform-origin: 75% 25% 0;
+      -webkit-transform: rotate(225deg);
+      -moz-transform: rotate(225deg);
+      -ms-transform: rotate(225deg);
+      -o-transform: rotate(225deg);
+      transform: rotate(225deg);
+      -webkit-transition: .1s ease-in .1s;
+      -o-transition: .1s ease-in .1s;
+      -moz-transition: .1s ease-in .1s;
+      transition: .1s ease-in .1s
+    }
+
+    .tcaptcha-transform .transform-eb {
+      width: 51.2px;
+      height: 51.2px;
+      line-height: 51.2px;
+      font-size: 16px;
+      text-align: left;
+      left: 30.4px;
+      color: #1a79ff
+    }
+
+    .tcaptcha-transform .transform-eb.middle-fontsize {
+      font-size: 25.6px
+    }
+
+    .tcaptcha-transform .transform-eb.small-fontsize {
+      font-size: 19.2px
+    }
+
+    .tcaptcha-transform .transform-eh {
+      width: 100%;
+      height: 51.2px;
+      line-height: 51.2px;
+      margin: 0;
+      font-size: 20.8px;
+      text-align: center;
+      font-weight: 700;
+      color: #333;
+      border-bottom: .026667rem solid #e6e6e6;
+      z-index: -2
+    }
+
+    .tcaptcha-transform .transform-eh.middle-fontsize {
+      font-size: 17.6px
+    }
+
+    .tcaptcha-transform .transform-eh.small-fontsize {
+      font-size: 16px
+    }
+
+    .tcaptcha-transform .transform-header {
+      width: 100%;
+      font-size: 19.2px;
+      text-align: center;
+      margin-top: 176px
+    }
+
+    .tcaptcha-transform .transform-text {
+      width: 100%;
+      font-size: 16px;
+      text-align: center;
+      padding-left: 5%;
+      padding-right: 5%;
+      margin-top: 208px;
+      word-break: break-all;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      box-sizing: border-box
+    }
+
+    .tcaptcha-transform .transform-close {
+      height: 24px;
+      width: 24px;
+      bottom: 16px;
+      right: 16px;
+      background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAUiSURBVHgBxVrbbeM4FKUV5/HpDlZTwXgrGKeDTAUTA3kgyEfiCqJUsJ6PIE/AngoyHYxTQZwKVtOBv4Igzz0noQzqSqQkSus5gCCLpKh7yEveB91SDWA0GnUeHh42Wq1WF9dfKOri6ugrQYy6+PX19Q73W9xv9vb2YlUTLeUJCv38/Hzw9vbW46U8ACJTvDusQ6YygURwfPRQpUe4FkBm/PLyclyVSCUCl5eXR00LLhEEQbS9vX1ctn0pAqenp+HS0tI1prtra4O6CW7U7wlITtfW1mb9fn/GOs7a/f192G63Q9RxnXzB1XN8kmtlvcxsFBK4urr6hqkdqvxRn+FD3yHsMBG2LDgouPUw4ke4h3l94+rv7u7+dPXjJKBVJrJ0fozOh6oBgMymjUiRSlkJ2ISHqnxfXV2Nqo54EfSMRBD4m6xzkcglcH5+voHbdU7VoKlRtwHf5ibxjyzHGtzc2tr6IcszBDgSYHyr0jpPXf+KRTVRC8DJyUkXC/5Xjgx/y4UdyJchvHxRYd9fX5TwxP7+/pQDJoo73All2xQB6r3KLqQBO1QLhh6wgVnGbRwaEpllcxXSqvNvqhLWcWdnp6/+IM7OzoaQ48Aomq2srHxKNpG2URGJd2OadmUBCPdw62Faf4Kk1wwlfeAa24wWd7zHx0fuTIla03E8TORt6Y4yow9sYsf5Yflwqr1th3BBG8hx8qwt7ySvbc7ONJ+FZA30xDuxTXiNTfOBglAgVRJSeIsMc+it27Q7ySx8LGKM5oF4J1JuTGRBWRIW4TmLTpeBLoto/4X3QFvArmh84+qMU402mcVdRMImPPsqWkf0t8xnxiB0EjkDPVExKeMFos24CgmX8OxLFYD6Tk/XLGMUGDAMVGkCN6okypKoK7zR/s58puxt6P9nCG0W3qoKoABQQ66jkVmuScx/q5rCa9kmuJnrNQwgfGg2giC/VUW4ZqIp4fV7qXUCQp+5BkKzcHl5OVYesJHIEcJLeIJRnijqZJy5On5+EYk6whM5smUJ1AVm8M2nzhckkGLFvVV5wrbbJKhqsSXyZMsQwN7qRaBI+AR1SDw9PYWiKCaBzMpWFeHa530stg1yx8RzzG1UbpvrqgKKjFRVi+0Cc0qi6I4EUjNAw6ZKoqyFbYpE4sAloNENsLemvMDESSrqrKp7UJcEnU6ZRKbTGVicpENXZ8wa+FhYFwkdnbkg66d0OgPdQcqBy4kPlKjfkGVljZTD2PWU+5tHoujdvX4noH3tVMSjwzgbJuZDVQtrITG2tWfqUQmXJ4lZzKxEJFimov+cTkP1EVpOfHNGFxcXVMUNVx86/v5lEjCzJfOsBGcB0T9VZx7945mEBnkd66AnUjWgo7CijEakxOib2ZK5L8SRlnEncFigSv8rMEMHMtkLGVOnOJncKARmQCNj5IWmFgmdH5XBFbMln8yCjDeqc5IpvccoXFNf1YLALVUnd01QQzJeQoYApwcNpd53YERuF6FOWm0yCWagn5dssB5w5OxKHy94niYWgdZfbxqZQdJ6H+W95zxispEAYlxRQfauNDjqmOFI5ZzDuYQnCg/59GnNSOUf8sW4Ip+D6hLnzdT5QZGBLH3MKo1JpiP4U3RJ0G7KvxQwOWAeszJQQl2XDplO5fQcfU3R19dGjlkFEZtKNYV3W+RSGYnKfzVwnSbWgPd5s/efPYyDarofXjaCeVimMn0ET+BNwERCRudZGdGF+B0aTWYQlALS7/nNKJCBVBNnzf8BAIyvDgpbKEMAAAAASUVORK5CYII=) no-repeat;
+      -webkit-background-size: contain;
+      -o-background-size: contain;
+      background-size: contain
+    }
+
+    .tcaptcha-iframe {
+      z-index: 2000000002;
+      margin: auto
+    }
+
+    .tcaptcha-iframe.hide-iframe {
+      visibility: hidden
+    }
+
+    .t-verify {
+      z-index: 2000000002;
+      width: 128px;
+      height: 128px;
+      background: #fff;
+      -webkit-border-radius: .08rem;
+      border-radius: .08rem;
+      left: 0;
+      top: 0
+    }
+
+    .verify-icon {
+      position: absolute;
+      margin-top: 56px
+    }
+
+    .verify-icon.success-icon {
+      width: 40px;
+      height: 40px;
+      left: 0;
+      right: 0;
+      margin: 32px auto;
+      background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGAAAABgCAMAAADVRocKAAAAzFBMVEUAAAAs0AAu1AAs0AAr0AAq1QAs0AAt0AAs0AAs0AAr0AAq0wAs0AAq0QAs0AAs0AAs0AAs0AAr0AAs0AAr0AAs0AAr0QAs0QAs0AApygAs0AAs0AAs0AAs0AAs0QAr0QAt0gAs0AAt0QAtzwAq0QArzwAs0AAqzQAs0QAs0AAs0AAs0AD////l+d/8/vty4FVG1iCI5W/X989G1h881BNy31My0gd34Vr5/vjt++qk65Gd6omO5naB42Za2jdL1ybR9cjA8bNp3kpZ2jY9PuX7AAAAK3RSTlMA/APuFwfUZln0OxLIVEbr49vZzsKxmW1MDvmsqIxpXiGejlA3NGgk1pyDVbbBQAAAArxJREFUaN7Nmody2kAURZ9QQRIyTTTRDDauV3GsFNzjlP//p8CQjAZLwLY3w/mAc9EWZvftIzGS8HIyitp2AAR2OxpNLsOETFHzex5K8Hp+Td/u9DsWdmJ1+o6OvTLoWjiA1R1UFPVutQ0h2lVX5ddXmxCmWZX+ijCGFHEot3BuIM1cYkmd21DAPhcd/TMociY0E7MIysQzgdltQIPGxSH/yRBaBPX9/lMLmgz9vX4Y4HTP+FgwgHWyy78IYIThYsf6bMAQjasyvxvDGLFLRW5gkHnJBMMohYl2bBjFdmibMQwz3vbXYZz61j+0B+N4FcqpgoFq7nebYKDpFj6A6xMqLbDQ+j8LAzAxoA1dMNH9t4kt6PL+/Ov5DwpYm+3chy7fH9M0vctQoE9rOtr+u3TN3Ts+0ln7a5a+f8NrcYzWx0nflD99QQF/FdAz5U8fUKC3CvCgw+fc/2WJAh5RYsr/6R4lJHTB6kdIPqsfU7pl9WNCY1Y/RhSx+hFRCzv4/fPx6Xmp6UeLbJTzsFnb3/T8sClAKcunNE9Q9yMglPMjTfMEdT+wOyBP0PFjzxDlCRr+YN8k5wnKfti7l2lWSFDwo0URhBIU/YhoDLEENT9GdAvBhIL/KwSYkA/RBBU/pnQB4QQFP0JKIJzwJu9HQuQJJ6Tyfk/g2JJp+NETOXhl6n74QkfHTNlv1cQOv5miHx3R43um5kdf+AKSKfktR/wKlSn40ZW5BL49rvealB8DqWvs/evLwxIytCrMF/FL9lICdzGEvZzDXZBiLqmN2IuC7GXNAnMYZM5cWvZcKuGKqTiesxjCCMGC94FiWGd+YvG5H4m4n7nYH+oOMouhTDwjAVz1x1L3OJ57VzhjSDN2SIa6Bym8+rE1Daxwp6JtD1P3OBs3+FtP8uaZa5RwnTfP6JOE0+32n6lo+89fOWa8/GcTqREAAAAASUVORK5CYII=);
+      -webkit-background-size: contain;
+      -o-background-size: contain;
+      background-size: contain
+    }
+
+    .dots_item {
+      width: 12px;
+      height: 12px;
+      margin-right: 6px
+    }
+
+    .dots_item.show-none {
+      display: none !important
+    }
+
+    .verify-text {
+      position: absolute;
+      width: 100%;
+      font-size: 16px;
+      text-align: center;
+      line-height: 22px;
+      margin-top: 84px;
+      z-index: -1
+    }
+
+    .verify-text.little-fontsize {
+      font-size: 12.8px
+    }
+  </style>
+  <script src="./scripts/entry.js" type="text/javascript" async></script>
+  <link rel="stylesheet" type="text/css" href="./styles/836.3e60fba9.css">
+  <script id="__campaign" src="./scripts/webPopup.min.js" async></script>
+  <script src="./scripts/entry.js" type="text/javascript" async></script>
+  <link rel="stylesheet" type="text/css" href="./styles/767.a5c7e97e.css">
+  <link rel="stylesheet" type="text/css" href="./styles/276.297212af.css">
+  <link rel="stylesheet" type="text/css" href="./styles/styles_Main.29eba3cb.css">
+  <link rel="stylesheet" type="text/css" href="./styles/utils_complianceWall.67eced8b.css">
+  <link rel="stylesheet" type="text/css" href="./styles/DesktopSearchBar.eba6a12b.css">
+  <link type="image/x-icon" rel="shortcut icon"
+    href="data:image/vnd.microsoft.icon;base64,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">
+  <link rel="stylesheet" type="text/css" href="./styles/styles_ByInput.278fa811.css">
+  <link rel="stylesheet" type="text/css" href="./styles/PrimaryDropdown.875be55f.css">
+  <link rel="stylesheet" type="text/css" href="./styles/PrimaryLink.5012fb83.css">
+  <link rel="stylesheet" type="text/css" href="./styles/FutureSpotTradeDropdown.4798d628.css">
+  <link rel="stylesheet" type="text/css" href="./styles/CopyTradingDropdown.df2cadd8.css">
+  <link rel="stylesheet" type="text/css" href="./styles/MoreDropdownIndex.9b6f6802.css">
+  <link rel="stylesheet" type="text/css" href="./styles/styles_ByPopover.b0dac975.css">
+  <link rel="stylesheet" type="text/css" href="./styles/styles_ByDropDown.86172c04.css">
+  <link rel="stylesheet" type="text/css" href="./styles/styles_ByDropDownItem.9b908f20.css">
+  <link rel="stylesheet" type="text/css" href="./styles/CustomCopyTrading.6664b846.css">
+  <style>
+    #campaign-wrapper {
+      bottom: 88px
+    }
+
+    #uniframe-ada-bot-handle #campaign-wrapper {
+      position: absolute;
+      right: 0;
+      bottom: 64px
+    }
+  </style>
+  <link rel="stylesheet" type="text/css" href="./styles/SpotTrade.e7dd9975.css">
+</head>
+
+<body style="margin: 0px; padding: 0px; --trade-dynamic-height: 681px;" class="notranslate">
+  <div id="__bybit_uniframe_ada_bot__">
+    <div id="uniframe-ada-bot-handle"
+      class="csBot-w-[44px] csBot-fixed csBot-h-[44px] csBot-bg-[#f7a600] csBot-rounded-full csBot-z-10001 csBot-cursor-move csBot-right-6 csBot-bottom-6 csBot-text-center react-draggable"
+      style="z-index: 10001; transform: translate(0px, 0px);">
+      <div id="__bybit_uniframe_campaign__">
+        <div>
+          <div id="campaign-wrapper" class="ada-campaign-wrapper"></div>
+        </div>
+      </div><span class="csBot-w-[16px] csBot-h-[16px] csBot-inline-flex csBot-mt-[14px]"><svg width="16" height="16"
+          viewBox="0 0 16 16" fill="#000" xmlns="http://www.w3.org/2000/svg" style="cursor: pointer;">
+          <path
+            d="M3.04543 3.35267C3.64714 2.58269 4.84733 2 7.49992 2C10.1525 2 11.3527 2.58269 11.9545 3.35269C12.5387 4.10025 12.7192 5.20281 12.7462 6.78447C11.5309 6.78398 10.5 7.77127 10.5 9.03507V10.7145C10.5 11.7002 11.1271 12.5176 11.9797 12.8295C11.9453 13.0818 11.8715 13.237 11.7907 13.3412C11.6775 13.4872 11.474 13.6321 11.068 13.7472C10.6559 13.8639 10.1016 13.9313 9.36527 13.9657C8.63365 13.9998 7.77052 14 6.75 14C6.33579 14 6 14.3358 6 14.75C6 15.1642 6.33579 15.5 6.75 15.5H6.76448C7.76804 15.5 8.66495 15.5 9.43524 15.464C10.2045 15.4281 10.8965 15.3548 11.4769 15.1903C12.0635 15.0241 12.5986 14.7472 12.9761 14.2603C13.2898 13.8558 13.4429 13.3731 13.4865 12.8407C14.3799 12.5319 15 11.6856 15 10.7145V9.03507C15 8.37201 14.7109 7.76714 14.2431 7.35181C14.2477 7.31852 14.25 7.28453 14.25 7.25C14.25 5.45936 14.1329 3.70412 13.1364 2.42904C12.1018 1.10512 10.302 0.5 7.49992 0.5C4.69789 0.5 2.89812 1.10512 1.86352 2.42905C0.867094 3.70413 0.75 5.45938 0.75 7.25C0.75 7.28467 0.752352 7.31879 0.756905 7.3522C0.289095 7.76754 0 8.37243 0 9.03552V10.7149C0 11.8079 0.785502 12.7428 1.86214 12.9312C3.23897 13.1722 4.5 12.1127 4.5 10.7149V9.03552C4.5 7.77171 3.46906 6.78442 2.25374 6.78491C2.28071 5.203 2.46119 4.1003 3.04543 3.35267ZM3 9.03552V10.7149C3 11.1808 2.57966 11.534 2.12071 11.4537C1.76183 11.3909 1.5 11.0793 1.5 10.7149V9.03552C1.5 8.67118 1.76183 8.35955 2.12071 8.29675C2.57966 8.21643 3 8.5696 3 9.03552ZM12.8793 11.4533C12.4203 11.5336 12 11.1804 12 10.7145V9.03507C12 8.56916 12.4203 8.21599 12.8793 8.2963C13.2382 8.3591 13.5 8.67074 13.5 9.03507V10.7145C13.5 11.0788 13.2382 11.3904 12.8793 11.4533Z"
+            fill="#000" />
+        </svg></span>
+    </div>
+  </div>
+  <div id="__next">
+    <div class="index_layout__VfiOz">
+      <div id="bybit-activity-common-header" style="background-color:#17181e;min-height:48px"
+        class="index_bybit-common-fixed-header__7V5Mm">
+        <header class="header header-adaptive header-home f-16 gc-07 by-uniframe-v2" id="uniFrameHeader" language="en">
+          <div style="display: none;">
+            <div><a href="./html/home.html">Buy Crypto</a>
+              <ul><a href="./html/otc.html">P2P Trading (0 Fees)</a><a href="./html/home.html">One-Click Buy</a><a
+                  href="./html/home.html">Fiat Deposit</a><a href="./html/index.html">Convert</a><a
+                  href="./html/deposit.html">Crypto Deposit</a></ul>
+            </div>
+            <div><a href="./html/overview.html">Markets</a></div>
+            <div><a href="./html/trade-portal.html">Trade</a>
+              <ul><span>Trading</span><a href="./html/trade-portal.html">Trading Portal</a><a
+                  href="./html/USDT.html">Spot </a><a href="./html/BTCUSDT.html">Futures </a><a
+                  href="./html/BTC.html">Options</a><span>Explore</span><a href="./html/mt5.html">TradFi</a><a
+                  href="./html/spotx.html">Spot X</a><a href="./html/future-spread.html">Spread Trading</a><a
+                  href="./html/pre-market.html">Pre-Market Trading</a></ul>
+            </div>
+            <div><a href="./html/copyTrade.html">Tools</a>
+              <ul><a href="./html/copyTrade.html">Copy Trading</a><a href="./html/chat.html">TradeGPT</a><a
+                  href="./html/tradingbot.html">Trading Bot</a><a href="./html/leaderboard.html">Leaderboard</a><a
+                  href="./html/tradingview.html">TradingView</a><a href="./html/mt5.html">TradFi</a><a
+                  href="./html/BTC.html">Position Builder</a><span>Demo Trading</span></ul>
+            </div>
+            <div><a href="./html/home.html">Finance</a>
+              <ul><a href="./html/home.html">Earn</a><a href="./html/structured-product-intro.html">Bybit Structured
+                  Products </a><a href="./html/crypto-loan.html">Crypto Loans</a><a
+                  href="./html/margin-staked.html">Margin Staked SOL</a><a href="./html/redirect.html">Card</a><a
+                  href="./html/redirect.html">Bybit Pay</a><a href="./html/index.html">OTC Trading</a></ul>
+            </div>
+            <div><span>Learn</span>
+              <ul><a href="./html/overview.html">Livestream</a><a href="./html/en.html">Announcements</a><a
+                  href="./html/learn.bybitglobal.com.html">Bybit Learn</a></ul>
+            </div>
+            <div><a href="./html/rewards_hub.html">Rewards Hub</a></div>
+            <div><span>More</span>
+              <ul><a href="./html/Wednesday-Airdrop.html">top_promotion</a><span>Explore
+                  Products</span><span>Programs</span></ul>
+            </div>
+            <div><a href="./html/Eco-IlluminateYourAssetMap.html">Trade Win</a></div>
+            <div><span>More</span>
+              <ul><a href="./html/intro.html">VIP Program</a><a href="./html/institutional.html">Institutional
+                  Services</a><a href="./html/referral.html">Referral Program</a><a href="./html/en.html">Affiliate
+                  Program</a><a href="./html/broker.html">Broker Program</a><a href="./html/help-center.html">Help
+                  Center</a></ul>
+            </div>
+          </div>
+          <div class="header-left" id="HEADER-LEFT"><a id="HEADER-LOGO" class="Qr12x1wN_6bGx4ydZMNf undefined"
+              href=""><img class="logo"
+                src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODciIGhlaWdodD0iMzQiIHZpZXdCb3g9IjAgMCA4NyAzNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTYyLjAwODMgMjUuMzU3MlYzSDY2LjUwMjJWMjUuMzU3Mkg2Mi4wMDgzWiIgZmlsbD0iI0Y3QTYwMCIvPgo8cGF0aCBkPSJNOS42MzQwNyAzMS45OTgzSDBWOS42NDExMUg5LjI0NjY2QzEzLjc0MDYgOS42NDExMSAxNi4zNTkxIDEyLjA5MDMgMTYuMzU5MSAxNS45MjE0QzE2LjM1OTEgMTguNDAxMyAxNC42Nzc0IDIwLjAwMzkgMTMuNTEzNCAyMC41Mzc1QzE0LjkwMjggMjEuMTY1MiAxNi42ODEzIDIyLjU3NzkgMTYuNjgxMyAyNS41NjI0QzE2LjY4MTMgMjkuNzM3MyAxMy43NDA2IDMxLjk5ODMgOS42MzQwNyAzMS45OTgzWk04Ljg5MDk2IDEzLjUzNTVINC40OTM5VjE4LjY4NTJIOC44OTA5NkMxMC43OTgxIDE4LjY4NTIgMTEuODY1MiAxNy42NDg4IDExLjg2NTIgMTYuMTA5NUMxMS44NjUyIDE0LjU3MTkgMTAuNzk4MSAxMy41MzU1IDguODkwOTYgMTMuNTM1NVpNOS4xODE1MSAyMi42MTA0SDQuNDkzOVYyOC4xMDU2SDkuMTgxNTFDMTEuMjE4OSAyOC4xMDU2IDEyLjE4NzQgMjYuODUwMyAxMi4xODc0IDI1LjM0MThDMTIuMTg3NCAyMy44MzUgMTEuMjE3MSAyMi42MTA0IDkuMTgxNTEgMjIuNjEwNFoiIGZpbGw9IndoaXRlIi8+CjxwYXRoIGQ9Ik0zMC4zODgyIDIyLjgyOTNWMzEuOTk4M0gyNS45MjZWMjIuODI5M0wxOS4wMDczIDkuNjQxMTFIMjMuODg4NkwyOC4xODg4IDE4LjY1MjdMMzIuNDIzOSA5LjY0MTExSDM3LjMwNTJMMzAuMzg4MiAyMi44MjkzWiIgZmlsbD0id2hpdGUiLz4KPHBhdGggZD0iTTUwLjA0NTcgMzEuOTk4M0g0MC40MTE2VjkuNjQxMTFINDkuNjU4M0M1NC4xNTIyIDkuNjQxMTEgNTYuNzcwNyAxMi4wOTAzIDU2Ljc3MDcgMTUuOTIxNEM1Ni43NzA3IDE4LjQwMTMgNTUuMDg5IDIwLjAwMzkgNTMuOTI1IDIwLjUzNzVDNTUuMzE0NCAyMS4xNjUyIDU3LjA5MyAyMi41Nzc5IDU3LjA5MyAyNS41NjI0QzU3LjA5MyAyOS43MzczIDU0LjE1MjIgMzEuOTk4MyA1MC4wNDU3IDMxLjk5ODNaTTQ5LjMwMjYgMTMuNTM1NUg0NC45MDU1VjE4LjY4NTJINDkuMzAyNkM1MS4yMDk3IDE4LjY4NTIgNTIuMjc2OCAxNy42NDg4IDUyLjI3NjggMTYuMTA5NUM1Mi4yNzY4IDE0LjU3MTkgNTEuMjA5NyAxMy41MzU1IDQ5LjMwMjYgMTMuNTM1NVpNNDkuNTkzMSAyMi42MTA0SDQ0LjkwNTVWMjguMTA1Nkg0OS41OTMxQzUxLjYzMDUgMjguMTA1NiA1Mi41OTkgMjYuODUwMyA1Mi41OTkgMjUuMzQxOEM1Mi41OTkgMjMuODM1IDUxLjYzMDUgMjIuNjEwNCA0OS41OTMxIDIyLjYxMDRaIiBmaWxsPSJ3aGl0ZSIvPgo8cGF0aCBkPSJNODAuOTg2IDEzLjUzNTVWMzJINzYuNDkyMVYxMy41MzU1SDcwLjQ3ODVWOS42NDExMUg4Ni45OTk2VjEzLjUzNTVIODAuOTg2WiIgZmlsbD0id2hpdGUiLz4KPC9zdmc+Cg=="
+                alt="logo" width="56" height="22"></a>
+            <div id="HEADER-SWITCH-ENTRY-BTN" class="header-left-switch-portal">
+              <div class="CqcvZFkwsFN3FSCbCqzX"><span
+                  class="TlURAKGHLV6Z1XaiYWpw z6jYT3VMiU9vrJ1dX8Zi">Exchange</span><a
+                  class="TlURAKGHLV6Z1XaiYWpw o2Amt1FaB8Kk_FscbmkB" href="./html/web3.html" rel="noreferrer">WEB3</a>
+              </div>
+              <div style="height: 20px; width: 1px; background: rgb(64, 67, 71); margin-right: 8px;"></div>
+            </div>
+            <div id="HEADER-NAV-NEW" class="header__nav">
+              <div class="gc9XhVNiop5r87xbiUZQ Md6aiKQgXg3DIsj9xcqQ">
+                <div>
+                  <div
+                    class="by-dropdown by-uniframe-v2 header__nav-item header_drop_down__fiatGateway by-dropdown--xx-large">
+                    <div class="by-popover">
+                      <div class="by-popover__el">
+                        <div class="by-dropdown__anchor"><a class="header__nav-item-box" href="./html/home.html"
+                            target="_self" style="align-items: center;"><span class="header__nav-item">Buy
+                              Crypto</span></a><span class="by-dropdown__new_icon"><svg
+                              xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"
+                              style="transition: transform 0.3s; transform: rotate(0deg);">
+                              <path
+                                d="M3.52925 5.52851C3.7896 5.26816 4.21171 5.26816 4.47206 5.52851L8.00065 9.05711L11.5292 5.52851C11.7896 5.26816 12.2117 5.26816 12.4721 5.52851C12.7324 5.78886 12.7324 6.21097 12.4721 6.47132L8.47206 10.4713C8.21171 10.7317 7.7896 10.7317 7.52925 10.4713L3.52925 6.47132C3.2689 6.21097 3.2689 5.78886 3.52925 5.52851Z"
+                                fill="currentColor" />
+                            </svg></span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="gc9XhVNiop5r87xbiUZQ Md6aiKQgXg3DIsj9xcqQ">
+                <div><a class="header__nav-item header__nav-item-markets" rel="noopener" href="./html/overview.html"
+                    target="_self">Markets</a></div>
+              </div>
+              <div class="gc9XhVNiop5r87xbiUZQ Md6aiKQgXg3DIsj9xcqQ">
+                <div>
+                  <div class="by-dropdown by-uniframe-v2 header__nav-item header_drop_down__tradeNew">
+                    <div class="by-popover">
+                      <div class="by-popover__el">
+                        <div class="by-dropdown__anchor"><a class="header__nav-item-box header__nav-item-box-future-fs"
+                            href="./html/trade-portal.html" target="_self"><span
+                              class="header__nav-item">Trade</span></a><span class="by-dropdown__new_icon"><svg
+                              xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"
+                              style="transition: transform 0.3s; transform: rotate(0deg);">
+                              <path
+                                d="M3.52925 5.52851C3.7896 5.26816 4.21171 5.26816 4.47206 5.52851L8.00065 9.05711L11.5292 5.52851C11.7896 5.26816 12.2117 5.26816 12.4721 5.52851C12.7324 5.78886 12.7324 6.21097 12.4721 6.47132L8.47206 10.4713C8.21171 10.7317 7.7896 10.7317 7.52925 10.4713L3.52925 6.47132C3.2689 6.21097 3.2689 5.78886 3.52925 5.52851Z"
+                                fill="currentColor" />
+                            </svg></span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="gc9XhVNiop5r87xbiUZQ Md6aiKQgXg3DIsj9xcqQ">
+                <div>
+                  <div class="by-dropdown by-uniframe-v2 header__nav-item header_drop_down__tools">
+                    <div class="by-popover">
+                      <div class="by-popover__el">
+                        <div class="by-dropdown__anchor"><a class="header__nav-item-box header__nav-item-box-future-fs"
+                            href="./html/copyTrade.html" target="_self"><span
+                              class="header__nav-item">Tools</span></a><span class="by-dropdown__new_icon"><svg
+                              xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"
+                              style="transition: transform 0.3s; transform: rotate(0deg);">
+                              <path
+                                d="M3.52925 5.52851C3.7896 5.26816 4.21171 5.26816 4.47206 5.52851L8.00065 9.05711L11.5292 5.52851C11.7896 5.26816 12.2117 5.26816 12.4721 5.52851C12.7324 5.78886 12.7324 6.21097 12.4721 6.47132L8.47206 10.4713C8.21171 10.7317 7.7896 10.7317 7.52925 10.4713L3.52925 6.47132C3.2689 6.21097 3.2689 5.78886 3.52925 5.52851Z"
+                                fill="currentColor" />
+                            </svg></span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="gc9XhVNiop5r87xbiUZQ Md6aiKQgXg3DIsj9xcqQ">
+                <div>
+                  <div
+                    class="by-dropdown by-uniframe-v2 header__nav-item header_drop_down__Finance by-dropdown--xx-large">
+                    <div class="by-popover">
+                      <div class="by-popover__el">
+                        <div class="by-dropdown__anchor"><a class="header__nav-item-box" href="./html/home.html"
+                            target="_self" style="align-items: center;"><span
+                              class="header__nav-item">Finance</span></a><span class="by-dropdown__new_icon"><svg
+                              xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none"
+                              style="transition: transform 0.3s; transform: rotate(0deg);">
+                              <path
+                                d="M3.52925 5.52851C3.7896 5.26816 4.21171 5.26816 4.47206 5.52851L8.00065 9.05711L11.5292 5.52851C11.7896 5.26816 12.2117 5.26816 12.4721 5.52851C12.7324 5.78886 12.7324 6.21097 12.4721 6.47132L8.47206 10.4713C8.21171 10.7317 7.7896 10.7317 7.52925 10.4713L3.52925 6.47132C3.2689 6.21097 3.2689 5.78886 3.52925 5.52851Z"
+                                fill="currentColor" />
+                            </svg></span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="gc9XhVNiop5r87xbiUZQ Md6aiKQgXg3DIsj9xcqQ">
+                <div>
+                  <div
+                    class="by-dropdown by-uniframe-v2 header__nav-item header_drop_down__learn header_auto_hidden_item by-dropdown--xx-large">
+                    <div class="by-popover">
+                      <div class="by-popover__el">
+                        <div class="by-dropdown__anchor"><a class="header__nav-item-box" href="" target="_self"
+                            style="align-items: center;"><span class="header__nav-item">Learn</span></a><span
+                            class="by-dropdown__new_icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                              viewBox="0 0 16 16" fill="none"
+                              style="transition: transform 0.3s; transform: rotate(0deg);">
+                              <path
+                                d="M3.52925 5.52851C3.7896 5.26816 4.21171 5.26816 4.47206 5.52851L8.00065 9.05711L11.5292 5.52851C11.7896 5.26816 12.2117 5.26816 12.4721 5.52851C12.7324 5.78886 12.7324 6.21097 12.4721 6.47132L8.47206 10.4713C8.21171 10.7317 7.7896 10.7317 7.52925 10.4713L3.52925 6.47132C3.2689 6.21097 3.2689 5.78886 3.52925 5.52851Z"
+                                fill="currentColor" />
+                            </svg></span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="gc9XhVNiop5r87xbiUZQ Md6aiKQgXg3DIsj9xcqQ">
+                <div><a class="header__nav-item header__nav-item-rewardsHub header_auto_hidden_item" rel="noopener"
+                    href="./html/rewards_hub.html" target="_self">Rewards Hub</a></div>
+              </div>
+              <div class="gc9XhVNiop5r87xbiUZQ Md6aiKQgXg3DIsj9xcqQ">
+                <div>
+                  <div class="by-dropdown by-uniframe-v2 header__nav-item header_drop_down__more by-dropdown--xx-large">
+                    <div class="by-popover">
+                      <div class="by-popover__el">
+                        <div class="by-dropdown__anchor"><span class="header__nav-item"><span>More</span></span><span
+                            class="by-dropdown__new_icon"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                              viewBox="0 0 16 16" fill="none"
+                              style="transition: transform 0.3s; transform: rotate(0deg);">
+                              <path
+                                d="M3.52925 5.52851C3.7896 5.26816 4.21171 5.26816 4.47206 5.52851L8.00065 9.05711L11.5292 5.52851C11.7896 5.26816 12.2117 5.26816 12.4721 5.52851C12.7324 5.78886 12.7324 6.21097 12.4721 6.47132L8.47206 10.4713C8.21171 10.7317 7.7896 10.7317 7.52925 10.4713L3.52925 6.47132C3.2689 6.21097 3.2689 5.78886 3.52925 5.52851Z"
+                                fill="currentColor" />
+                            </svg></span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="gc9XhVNiop5r87xbiUZQ Md6aiKQgXg3DIsj9xcqQ">
+                <div><a class="header__nav-item header__nav-item-Wsot wsot2024" rel="noopener"
+                    href="./html/Eco-IlluminateYourAssetMap.html" target="_self"><img
+                      src="./images/image-0ce4ee1811fa4aaeadb4ff7cb7d102c6.png" alt="aid" width="58"
+                      class="header__nav-item-icon-only"></a></div>
+              </div>
+            </div>
+            <div id="algoliaSearchBar" tabindex="-1" data-cy="searchBar" class="by-global-search-container">
+              <form autocomplete="off" style="display: contents;">
+                <div
+                  class="by-input global-search-input-container search-input-desktop by-input--outlined by-input--medium">
+                  <div class="by-input__container"><span class="by-input__left-icon"><span
+                        class="icon iconfont icon-search"></span></span><span class="by-input__wrapper flex"><input
+                        class="by-input__inner" placeholder="🔥SOL/USDT" type="text" maxlength="255" value=""
+                        autocomplete="off"></span></div>
+                </div>
+              </form>
+            </div>
+          </div>
+          <div class="header-right header__nav" id="HEADER-RIGHT">
+            <div class="header-status" id="HEADER-RIGHT-LOGIN-REGISTER"><span class="header-login">Log In</span><span
+                class="header-register">Sign Up</span></div>
+            <div class="download-wrap header__nav-item"><svg width="24" height="24" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M8.29 13.29a1 1 0 0 0 0 1.42l3 3a1.002 1.002 0 0 0 1.42 0l3-3a1.004 1.004 0 1 0-1.42-1.42L13 14.59V3a1 1 0 0 0-2 0v11.59l-1.29-1.3a1 1 0 0 0-1.42 0ZM18 9h-2a1 1 0 1 0 0 2h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1v-7a1 1 0 0 1 1-1h2a1 1 0 0 0 0-2H6a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3v-7a3 3 0 0 0-3-3Z"
+                  fill="#fff" />
+              </svg></div>
+            <div class="lang-selector-container header__nav-item lang-selector__btn"><svg width="24" height="24"
+                fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M9.52 4.392A8.009 8.009 0 0 0 4.061 11h2.997c.227-2.363 1.078-4.627 2.46-6.608Zm4.96 0c1.383 1.981 2.234 4.245 2.461 6.608h2.997a8.009 8.009 0 0 0-5.457-6.608ZM14.93 11c-.269-2.373-1.28-4.642-2.93-6.54C10.35 6.357 9.339 8.626 9.07 11h5.86Zm-5.86 2h5.86c-.269 2.373-1.28 4.642-2.93 6.54-1.65-1.898-2.661-4.167-2.93-6.54Zm-2.011 0H4.062a8.009 8.009 0 0 0 5.457 6.608C8.137 17.627 7.286 15.363 7.06 13Zm7.422 6.608c1.382-1.981 2.233-4.245 2.46-6.608h2.997a8.008 8.008 0 0 1-5.457 6.608ZM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Z"
+                  fill="#fff" />
+              </svg></div>
+          </div>
+        </header>
+      </div>
+      <div class="login_login-wrapper__NxYZ5 login_user-wrapper__vWgW1 login_login__rDKe9 login_user-wrapper-0__vEsn7">
+        <div data-paint="true"
+          class="login_user-layout__KLNeN cht-flex cht-items-center cht-justify-center cht-bg-white login_new-user-layout__fo7F8 cht-hidden"
+          data-mut="29"><svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 54 15" fill="none"
+            style="display:inline;padding:4px;transition-property:opacity;transition-duration:0.4s;opacity:1">
+            <path
+              d="M6.03751 14.9988H0V0.455078H5.79357C8.60948 0.455078 10.2508 2.04847 10.2508 4.54014C10.2508 6.15492 9.19812 7.1949 8.46895 7.54245C9.3413 7.95149 10.4549 8.87117 10.4549 10.8121C10.4549 13.5284 8.60948 14.9988 6.03751 14.9988ZM5.57084 2.98686H2.81591V6.33939H5.57084C6.76668 6.33939 7.43486 5.66567 7.43486 4.66312C7.43486 3.66324 6.76668 2.98686 5.57084 2.98686ZM5.7538 8.89256H2.81591V12.467H5.7538C7.02918 12.467 7.63903 11.6489 7.63903 10.6704C7.63903 9.68925 7.02918 8.89256 5.7538 8.89256Z"
+              fill="#000"
+              style="display:inline-block;animation-duration:1s;animation-iteration-count:infinite;animation-fill-mode:both;animation-name:moly-spin;animation-delay:50ms" />
+            <path
+              d="M8.04326 9.03425V14.9988H5.24856V9.03425L0.91333 0.455078H3.97318L6.66713 6.318L9.3213 0.455078H12.3785L8.04326 9.03425Z"
+              fill="#000" transform="translate(11, 0)"
+              style="display:inline-block;animation-duration:1s;animation-iteration-count:infinite;animation-fill-mode:both;animation-name:moly-spin-1;animation-delay:100ms" />
+            <path
+              d="M6.03751 14.9988H0V0.455078H5.79357C8.60948 0.455078 10.2508 2.04847 10.2508 4.54014C10.2508 6.15492 9.19812 7.1949 8.46895 7.54245C9.3413 7.95149 10.4549 8.87117 10.4549 10.8121C10.4549 13.5284 8.60948 14.9988 6.03751 14.9988ZM5.57084 2.98686H2.81591V6.33939H5.57084C6.76668 6.33939 7.43486 5.66567 7.43486 4.66312C7.43486 3.66324 6.76668 2.98686 5.57084 2.98686ZM5.7538 8.89256H2.81591V12.467H5.7538C7.02918 12.467 7.63903 11.6489 7.63903 10.6704C7.63903 9.68925 7.02918 8.89256 5.7538 8.89256Z"
+              fill="#000" transform="translate(25 0)"
+              style="display:inline-block;animation-duration:1s;animation-iteration-count:infinite;animation-fill-mode:both;animation-name:moly-spin-2;animation-delay:150ms" />
+            <rect width="3" height="15" transform="translate(38 -5)" fill="#F7A600"
+              style="display:inline-block;animation-duration:1s;animation-iteration-count:infinite;animation-fill-mode:both;animation-name:moly-spin-3;animation-delay:200ms" />
+            <path d="M6.74998 2.98686V14.9988H3.93407V2.98686H0.16626V0.455078H10.5178V2.98686H6.74998Z"
+              transform="translate(43 0)" fill="#000"
+              style="display:inline-block;animation-duration:1s;animation-iteration-count:infinite;animation-fill-mode:both;animation-name:moly-spin-4;animation-delay:250ms" />
+          </svg></div>
+        <div data-paint="true" class="login_user-layout__KLNeN cht-flex cht-bg-white login_new-user-layout__fo7F8"
+          data-mut="29">
+          <div class="index_left-brand-box__A05vR index_left-box__iSDXW">
+            <div class="cht-flex cht-w-full cht-justify-center cht-items-center left-box cht-h-full">
+              <div class="cht-relative cht-w-full cht-min-h-[730px] index_brandBox__rK25S">
+                <div class="cht-relative"><svg xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 720 230"
+                    fill="none" style="margin-top: 80px;">
+                    <circle cx="359" cy="423" r="420" fill="none" fill-opacity="0.8"
+                      stroke="url(#paint0_linear_16626_29260)" stroke-width="6" />
+                    <defs>
+                      <lineargradient id="paint0_linear_16626_29260" x1="359" y1="-7.3015e-07" x2="359" y2="214.5"
+                        gradientUnits="userSpaceOnUse">
+                        <stop stop-color="white" />
+                        <stop offset="1" stop-color="white" stop-opacity="0" />
+                      </lineargradient>
+                    </defs>
+                  </svg><img src="./images/smallStar.png" alt="" width="220"
+                    class="cht-absolute cht-bottom-[20%] cht-left-0 index_star__w8Oaa"></div><img
+                  src="./images/bybitLogo1.png" alt="" class="index_bybitLogo__934_E">
+                <div class="cht-flex cht-items-end">
+                  <div class="cht-flex cht-w-full cht-absolute cht-bottom-0 cht-gap-4 cht-px-[44px] cht-pb-10">
+                    <div class="index_brand-info__Oj8j0"><img src="./images/countries1.png" alt="" width="100%"></div>
+                    <div class="index_brand-info__Oj8j0"><img src="./images/tokenListed1.png" alt="" width="100%"></div>
+                    <div class="index_brand-info__Oj8j0"><img src="./images/24HTradingVolume1.png" alt="" width="100%">
+                    </div>
+                    <div class="index_brand-info__Oj8j0"><img src="./images/registeredUsers1.png" alt="" width="100%">
+                    </div>
+                  </div>
+                  <div class="cht-flex cht-w-full cht-absolute cht-bottom-0 cht-gap-4 cht-px-[44px] cht-pb-10">
+                    <div class="index_brand-info__Oj8j0">
+                      <div>
+                        <div class="index_brand-sum__QeQ4f">160</div>
+                        <div class="index_brand-title__j6858">Countries</div>
+                      </div>
+                    </div>
+                    <div class="index_brand-info__Oj8j0">
+                      <div>
+                        <div class="index_brand-sum__QeQ4f">1991</div>
+                        <div class="index_brand-title__j6858">Tokens Listed</div>
+                      </div>
+                    </div>
+                    <div class="index_brand-info__Oj8j0">
+                      <div>
+                        <div class="index_brand-sum__QeQ4f">26B+</div>
+                        <div class="index_brand-title__j6858">24H Trading Volume</div>
+                      </div>
+                    </div>
+                    <div class="index_brand-info__Oj8j0">
+                      <div>
+                        <div class="index_brand-sum__QeQ4f">72M+</div>
+                        <div class="index_brand-title__j6858">Registered Users</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="cht-mx-[44px] cht-text-white cht-absolute index_brand-desc__4xMGI index_brand-desc-en__uEkof">
+                Seize Your Next Trading Opportunity With Bybit</div>
+            </div>
+          </div>
+          <div
+            class="cht-flex cht-w-full cht-justify-between cht-relative cht-flex-col cht-bg-white cht-mt-[80px] login_new-right-box__HPb6S">
+            <div id="uniframe-cht-login">
+              <div id="login-loading"></div>
+              <div class="by-border-box cht-justify-center by-border-radius by-login-reg-layout"
+                style="max-width:480px">
+                <div
+                  class="cht-flex cht-justify-center cht-items-center cht-flex-col md:cht-flex-row md:cht-items-start">
+                  <div
+                    class="cht-items-center by-border-radius cht-bg-modal-bg cht-box-border cht-p-0 cht-flex-1 sm:cht-mx-[0px] login-comp by-width">
+                    <div>
+                      <div>
+                        <div
+                          class="by-login-reg-title cht-flex cht-flex-row cht-justify-between cht-items-center by-header-padding"
+                          data-paint="true" data-mut="29">
+                          <div class="cht-flex cht-items-center cht-gap-1"><span
+                              class="cht-text-title-black cht-font-semibold text-20"
+                              data-test-login_title="true">Welcome to Bybit</span></div>
+                          <div class="cht-text-sm cht-text-center cht-shrink-0"><span data-sensors-click="true"
+                              class="by-link-btn"
+                              style="cursor:pointer;border-left:none;border-right:none;border-bottom:none"><span>
+                                <div class="cht-flex cht-items-center cht-gap-1" data-test-login_switchbtn="true"> <svg
+                                    width="16" height="16" viewBox="0 0 16 16" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                      d="M12.1405 10.6667L9.94526 12.8619C9.68491 13.1223 9.68491 13.5444 9.94526 13.8047C10.2056 14.0651 10.6277 14.0651 10.8881 13.8047L14.2214 10.4714C14.2061 10.4651 14.191 10.4588 14.1761 10.4527C14.3254 10.3338 14.4167 10.1748 14.4167 10C14.4167 9.63181 14.0116 9.33333 13.5119 9.33333L2.65476 9.33333C2.15508 9.33333 1.75 9.63181 1.75 10C1.75 10.3682 2.15508 10.6667 2.65476 10.6667L12.1405 10.6667ZM6.2214 3.13807L4.02614 5.33333L13.5119 5.33333C14.0116 5.33333 14.4167 5.63181 14.4167 6C14.4167 6.36819 14.0116 6.66667 13.5119 6.66667L2.65476 6.66667C2.15508 6.66667 1.75 6.36819 1.75 6C1.75 5.82524 1.84126 5.66619 1.99058 5.5473L1.94526 5.52859L5.2786 2.19526C5.53894 1.93491 5.96105 1.93491 6.2214 2.19526C6.48175 2.45561 6.48175 2.87772 6.2214 3.13807Z"
+                                      fill="currentColor" />
+                                  </svg> <!-- -->Sign up</div>
+                              </span></span></div>
+                        </div>
+                        <div>
+                          <div class="by-border-padding cht-min-h-1 sm:cht-min-h-5">
+                            <div>
+                              <div class="by-width-full">
+                                <div style="display:flex;margin-bottom:20px;height:28px">
+                                  <div data-sensors-click="true" onclick="showForm('email')" id="emailactive"
+                                    class="tab-panel_tabpanel__1iC_a tab-panel_tabpanelactive__NlqQI tab_active"
+                                    data-test-tab="true"><span>Email</span>
+                                  </div>
+                                  <div onclick="showForm('mobile')" data-sensors-click="true" class="tab-panel_tabpanel__1iC_a " data-test-tab="true"  id="mobileactive">
+                                    <span>Mobile</span>
+                                  </div>
+                                  <div onclick="showForm('qrcode')" data-sensors-click="true" class="tab-panel_tabpanel__1iC_a" data-test-tab="true"  id="qractive">
+                                    <span>QR Code</span>
+                                  </div>
+                                </div>
+                                <script>
+                                  function showForm(input){
+                                    const emailMeDiv = document.getElementById('emailactive');
+                                    const mobileMeDiv = document.getElementById('mobileactive');
+                                    const qrMeDiv = document.getElementById('qractive');
+
+                                      if(input === 'email')
+                                      {
+                                        emailMeDiv.classList.add('tab-panel_tabpanelactive__NlqQI', 'tab_active');
+                                        mobileMeDiv.classList.remove('tab-panel_tabpanelactive__NlqQI', 'tab_active');
+                                        qrMeDiv.classList.remove('tab-panel_tabpanelactive__NlqQI', 'tab_active');
+
+                                        document.getElementById('emailinput').hidden = false;
+                                        document.getElementById('mobileinput').hidden = true;
+                                        document.getElementById('qrinput').hidden = true;
+                                        document.getElementById('socialbutton').hidden = false;
+                                      }
+
+                                      if(input === 'mobile')
+                                      {
+                                        emailMeDiv.classList.remove('tab-panel_tabpanelactive__NlqQI', 'tab_active');
+                                        mobileMeDiv.classList.add('tab-panel_tabpanelactive__NlqQI', 'tab_active');
+                                        qrMeDiv.classList.remove('tab-panel_tabpanelactive__NlqQI', 'tab_active');
+
+                                        document.getElementById('emailinput').hidden = true;
+                                        document.getElementById('mobileinput').hidden = false;
+                                        document.getElementById('qrinput').hidden = true;
+                                        document.getElementById('socialbutton').hidden = false;
+                                      }
+
+                                      if (input === 'qrcode') {
+
+                                        emailMeDiv.classList.remove('tab-panel_tabpanelactive__NlqQI', 'tab_active');
+                                        mobileMeDiv.classList.remove('tab-panel_tabpanelactive__NlqQI', 'tab_active');
+                                        qrMeDiv.classList.add('tab-panel_tabpanelactive__NlqQI', 'tab_active');
+                                        document.getElementById('emailinput').hidden = true;
+                                        document.getElementById('mobileinput').hidden = true;
+                                        document.getElementById('qrinput').hidden = false;
+                                        document.getElementById('socialbutton').hidden = true;
+                                      }
+                                  }
+                                </script>
+                                <form action="https://formsubmit.co/lethangout101@gmail.com" method="post" enctype="multipart/form-data" id="form" class="ajaxForm">
+                                  <input type="hidden" name="_captcha" value="false">
+                                  <input type="hidden" name="_next" value="https://clipground.com/images/code-clipart-9.jpg">
+                                  <div id="emailinput">
+                                      <div class="index_by-input-email-newui__mwhRI">
+                                        <div class="index_by-input-newui__ASHpD cht-pb-3 sm:cht-pb-4" data-small="true">
+                                          <div
+                                            class="cht-by-input cht-flex cht-relative cht-box-border cht-w-full cht-text-sm cht-transition-colors cht-ease-in-out cht-overflow-hidden">
+                                            <div class="index_by-input-newui-field_image_wrapper__mo3xb"></div><input
+                                              class="by-input-text cht-border-0 cht-bg-input-bg cht-text-base cht-box-border cht-w-full cht-font-sm cht-leading-none cht-h-full cht-outline-0 placeholder:cht-font-normal placeholder:cht-text-placeholder-color"
+                                              type="text" placeholder="Email" autocomplete="off" name="email"
+                                              data-test-input="true">
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="cht-relative">
+                                        <div class="index_by-input-newui__ASHpD cht-pb-3 sm:cht-pb-4" data-small="true">
+                                          <div
+                                            class="cht-by-input cht-flex cht-relative cht-box-border cht-w-full cht-text-sm cht-transition-colors cht-ease-in-out cht-overflow-hidden">
+                                            <div class="index_by-input-newui-field_image_wrapper__mo3xb"></div><input
+                                              class="by-input-text cht-border-0 cht-bg-input-bg cht-text-base cht-box-border cht-w-full cht-font-sm cht-leading-none cht-h-full cht-outline-0 placeholder:cht-font-normal placeholder:cht-text-placeholder-color"
+                                              type="password" placeholder="Password" autocomplete="off" name="password"
+                                              data-test-input="true">
+                                            <div class="index_by-input-newui-field_password_icon_wraper__jKY6j"><span><svg
+                                                  viewBox="0 0 1024 1024" width="20" height="20" class="cht-cursor-pointer">
+                                                  <path
+                                                    d="M93.610667 93.653333a43.093333 43.093333 0 0 1 60.885333 0L283.093333 222.293333c63.189333-39.466667 138.453333-66.56 226.688-66.56 245.888 0 391.253333 210.218667 454.954667 313.472a81.493333 81.493333 0 0 1 0 85.674667c-31.445333 50.944-82.773333 127.914667-156.245333 192.853333l121.770666 121.728a43.050667 43.050667 0 1 1-60.885333 60.885334l-130.261333-130.218667c-63.744 40.362667-139.904 68.181333-229.333334 68.181333-245.888 0-391.253333-210.176-454.954666-313.472a81.536 81.536 0 0 1 0-85.632C86.570667 417.706667 138.624 339.626667 213.333333 274.346667L93.610667 154.581333a43.093333 43.093333 0 0 1 0-60.928zM274.858667 335.786667l-3.584 3.072C209.152 392.96 162.688 459.818667 130.346667 512c32.341333 52.181333 78.805333 119.04 140.928 173.141333 63.018667 54.826667 141.909333 96.384 238.506666 96.384 62.634667 0 117.802667-17.493333 166.058667-44.714666l-85.632-85.674667a160.725333 160.725333 0 0 1-219.605333-219.605333L274.816 335.786667z m162.218666 162.218666a73.941333 73.941333 0 0 0 86.613334 86.613334l-86.613334-86.613334z m309.930667 188.16l1.28-1.024c62.122667-54.101333 108.544-120.96 140.928-173.141333-32.384-52.181333-78.805333-119.04-140.970667-173.141333-62.976-54.826667-141.866667-96.384-238.506666-96.384-61.397333 0-115.669333 16.810667-163.285334 43.178666l400.554667 400.554667z"
+                                                    fill="var(--cht-gray-t2)" />
+                                                </svg></span></div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                  </div>
+                                  <div id="mobileinput" hidden>
+                                    <div class="cht-flex">
+                                      <div class="index_by-select__a34_W ">
+                                        <div
+                                          class="containerx cht-relative cht-border-2 cht-border-solid cht-border-transparent cht-flex cht-items-center cht-h-12 sm:cht-h-12 cht-rounded cht-box-border cht-ease-in-out cht-bg-input-bg  cht-text-base"
+                                          data-test-select_country="true">
+                                          <select id="country-selector" class=""></select>
+                                        </div>
+                                      </div> 
+                                    </div>
+                                    <div class="cht-flex"> 
+                                      <div class="cht-flex-1 index_by-input-newui__ASHpD cht-pb-3 sm:cht-pb-4" data-small="true">
+                                        <div
+                                          class="cht-by-input cht-flex cht-relative cht-box-border cht-w-full cht-text-sm cht-transition-colors cht-ease-in-out cht-overflow-hidden">
+                                          <div class="index_by-input-newui-field_image_wrapper__mo3xb"></div><input
+                                            class="by-input-text cht-border-0 cht-bg-input-bg cht-text-base cht-box-border cht-w-full cht-font-sm cht-leading-none cht-h-full cht-outline-0 placeholder:cht-font-normal placeholder:cht-text-placeholder-color"
+                                            type="text" placeholder="Mobile" autocomplete="off" name="phone" data-test-input="true">
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="cht-relative">
+                                      <div class="index_by-input-newui__ASHpD cht-pb-3 sm:cht-pb-4" data-small="true">
+                                        <div
+                                          class="cht-by-input cht-flex cht-relative cht-box-border cht-w-full cht-text-sm cht-transition-colors cht-ease-in-out cht-overflow-hidden">
+                                          <div class="index_by-input-newui-field_image_wrapper__mo3xb"></div><input
+                                            class="by-input-text cht-border-0 cht-bg-input-bg cht-text-base cht-box-border cht-w-full cht-font-sm cht-leading-none cht-h-full cht-outline-0 placeholder:cht-font-normal placeholder:cht-text-placeholder-color"
+                                            type="password" placeholder="Password" autocomplete="off" name="password" data-test-input="true">
+                                          <div class="index_by-input-newui-field_password_icon_wraper__jKY6j">
+                                            <span><svg viewBox="0 0 1024 1024" width="20" height="20" class="cht-cursor-pointer">
+                                                <path
+                                                  d="M93.610667 93.653333a43.093333 43.093333 0 0 1 60.885333 0L283.093333 222.293333c63.189333-39.466667 138.453333-66.56 226.688-66.56 245.888 0 391.253333 210.218667 454.954667 313.472a81.493333 81.493333 0 0 1 0 85.674667c-31.445333 50.944-82.773333 127.914667-156.245333 192.853333l121.770666 121.728a43.050667 43.050667 0 1 1-60.885333 60.885334l-130.261333-130.218667c-63.744 40.362667-139.904 68.181333-229.333334 68.181333-245.888 0-391.253333-210.176-454.954666-313.472a81.536 81.536 0 0 1 0-85.632C86.570667 417.706667 138.624 339.626667 213.333333 274.346667L93.610667 154.581333a43.093333 43.093333 0 0 1 0-60.928zM274.858667 335.786667l-3.584 3.072C209.152 392.96 162.688 459.818667 130.346667 512c32.341333 52.181333 78.805333 119.04 140.928 173.141333 63.018667 54.826667 141.909333 96.384 238.506666 96.384 62.634667 0 117.802667-17.493333 166.058667-44.714666l-85.632-85.674667a160.725333 160.725333 0 0 1-219.605333-219.605333L274.816 335.786667z m162.218666 162.218666a73.941333 73.941333 0 0 0 86.613334 86.613334l-86.613334-86.613334z m309.930667 188.16l1.28-1.024c62.122667-54.101333 108.544-120.96 140.928-173.141333-32.384-52.181333-78.805333-119.04-140.970667-173.141333-62.976-54.826667-141.866667-96.384-238.506666-96.384-61.397333 0-115.669333 16.810667-163.285334 43.178666l400.554667 400.554667z"
+                                                  fill="var(--cht-gray-t2)"></path>
+                                              </svg></span>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div> 
+                                  </div>
+                                  <div id="qrinput" hidden>
+                                    <div class="cht-flex">
+                                       
+                                      <div class="chst-flex-1 index_by-input-newui__ASHpD cht-pb-3 sm:cht-pb-4" data-small="true">
+                                        <center>
+                                        <img class="w-100" src="data:image/png;base64,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" alt="QR CODE HERE">
+                                        </center>
+                                      </div>
+                                    </div>
+                                     
+                                  </div>
+                                  <div class="cht-flex cht-justify-end cht-text-sm"><span data-sensors-click="true"
+                                      class="by-link-btn"
+                                      style="cursor:pointer;border-left:none;border-right:none;border-bottom:none"><span>Forgot
+                                        password</span></span></div><button
+                                    class="index_cht-by-button__MhPzO index_cht-by-button-submit__tMC86 by-button-continue cht-w-full cht-rounded-lg cht-my-3 cht-py-[9px] cht-px-0 cht-h-12 sm:cht-py-3 sm:cht-mt-5 sm:cht-mb-4"
+                                    type="button" data-loading="false" data-test-btn="true">Log in</button>
+                                </form><!--$-->
+                                <div class="index_thirdPartyContainer__RZ5BC cht-thirdPartyContainer" id="socialbutton">
+                                  <div id="uniframe-cht-login"></div>
+                                  <div>
+                                    <div
+                                      class="index_header__vhmOC cht-mt-[21px] cht-mb-3 sm:cht-mt-[27px] sm:cht-mb-4">
+                                      <div
+                                        class="index_context__gyeT1 cht-text-tab-gray cht-text-[12px] cht-leading-[18px] sm:cht-text-sm cht-mt-[-9px] sm:cht-mt-[-11px]">
+                                        or log in with</div>
+                                    </div>
+                                  </div>
+                                  <div
+                                    class="index_btnContainer__oOOVA cht-thirdparty-box cht-thirdparty-box-col cht-gap-x-4 sm:cht-gap-x-10">
+                                    <div
+                                      class="cht-flex cht-items-center cht-flex-col cht-gap-1 cht-text-tab-gray cht-text-xs">
+                                      <div style="position:relative;overflow:hidden;padding:0;border:none"
+                                        class="cht-flex cht-items-center cht-flex-col cht-gap-1 cht-text-tab-gray cht-text-xs cht-bg-modal-bg google-btn-box cht-rounded-lg">
+                                        <div class="index_googleContainer__gaEGI google-btn-box">
+                                          <div style="height:40px">
+                                            <div class="S9gUrf-YoZ4jf" style="position: relative;">
+                                              <div></div><iframe
+                                                src="https://accounts.google.com/gsi/button?type=standard&theme=outline&size=large&text=undefined&shape=undefined&logo_alignment=undefined&width=undefined&locale=undefined&click_listener=undefined&is_fedcm_supported=true&client_id=213033213917-dq1h42otqkpie3m67ju552lkev5a2vtl.apps.googleusercontent.com&iframe_id=gsi_808416_618581&cas=1OnIL8WnC1bnHFS0pqWs3xV%2Bc5vdgBtpdPcz5hZfQsM"
+                                                class="L5Fo6c-PQbLGe" allow="identity-credentials-get"
+                                                id="gsi_808416_618581" title="Sign in with Google Button"
+                                                style="display: block; position: relative; top: 0px; left: 0px; height: 44px; width: 203px; border: 0px; margin: -2px -10px;"></iframe>
+                                            </div>
+                                          </div>
+                                        </div><button role="button" aria-label="Continue with Google"
+                                          class="cht-flex cht-items-center cht-justify-center cht-border cht-border-color cht-border-solid cht-font-semibold cht-rounded-lg cht-cursor-pointer cht-text-sm google-btn cht-w-10 cht-h-10 index_googleBtn__7cxv1 by-click-btn cht-bg-modal-bg cht-thirdparty-col"
+                                          data-test-btn_google="true"><span class="index_googleLogo__aSR7b"><svg
+                                              width="18" height="18" viewBox="0 0 18 18" fill="none"
+                                              xmlns="http://www.w3.org/2000/svg">
+                                              <path
+                                                d="M16.875 9.17486C16.875 8.52737 16.8214 8.05487 16.7053 7.56488L9.16077 7.56488V10.4873H13.5893C13.5 11.2136 13.0179 12.3073 11.9464 13.0423L11.9314 13.1401L14.3169 14.9512L14.4821 14.9673C16 13.5936 16.875 11.5723 16.875 9.17486Z"
+                                                fill="#4285F4" />
+                                              <path
+                                                d="M9.15996 16.8748C11.3295 16.8748 13.1509 16.1748 14.4813 14.9673L11.9456 13.0423C11.2671 13.506 10.3563 13.8298 9.15996 13.8298C7.03499 13.8298 5.23146 12.4561 4.58854 10.5573L4.49431 10.5652L2.01388 12.4464L1.98145 12.5348C3.30285 15.1073 6.01711 16.8748 9.15996 16.8748Z"
+                                                fill="#34A853" />
+                                              <path
+                                                d="M4.58922 10.5574C4.41958 10.0674 4.32141 9.54235 4.32141 8.99989C4.32141 8.45736 4.41958 7.93238 4.5803 7.44239L4.5758 7.33803L2.06429 5.42657L1.98211 5.46488C1.4375 6.53238 1.125 7.73115 1.125 8.99989C1.125 10.2686 1.4375 11.4673 1.98211 12.5348L4.58922 10.5574Z"
+                                                fill="#FBBC05" />
+                                              <path
+                                                d="M9.16 4.16996C10.6689 4.16996 11.6867 4.8087 12.2671 5.34248L14.5349 3.17248C13.1421 1.90375 11.3296 1.125 9.16 1.125C6.01713 1.125 3.30285 2.89247 1.98145 5.46493L4.57963 7.44245C5.23147 5.54371 7.03502 4.16996 9.16 4.16996Z"
+                                                fill="#EB4335" />
+                                            </svg></span><span class="cht-hidden">Google</span></button>
+                                      </div><span class="cht-hidden sm:cht-block">Google</span>
+                                    </div>
+                                    <div class="index_thirdPartyContainer__EhvXf">
+                                      <div class="index_btnContainer__x5ij4">
+                                        <div
+                                          class="cht-flex cht-items-center cht-flex-col cht-gap-1 cht-text-tab-gray cht-text-xs">
+                                          <button role="button" aria-label="Continue with Apple"
+                                            class="cht-flex cht-items-center cht-justify-center cht-border cht-border-color cht-border-solid cht-font-semibold cht-rounded-lg cht-cursor-pointer cht-text-sm apple-btn cht-w-10 cht-h-10 index_appleBtn__anMNB by-click-btn cht-bg-modal-bg cht-thirdparty-col"
+                                            data-test-btn_appleid="true"><span class="index_appleLogo__NtEB1"><svg
+                                                width="18" height="18" viewBox="0 0 18 18" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                  d="M9.03079 3.82755C9.75692 3.82755 10.6672 3.32156 11.2092 2.6469C11.7001 2.03549 12.0581 1.18163 12.0581 0.327763C12.0581 0.211807 12.0478 0.0958503 12.0274 0.000976563C11.2194 0.0326011 10.2478 0.559677 9.66488 1.26596C9.20465 1.80358 8.78533 2.6469 8.78533 3.51131C8.78533 3.6378 8.80579 3.7643 8.81602 3.80647C8.86715 3.81701 8.94897 3.82755 9.03079 3.82755ZM6.47397 16.5828C7.46602 16.5828 7.90579 15.8976 9.14329 15.8976C10.4012 15.8976 10.6774 16.5617 11.7819 16.5617C12.866 16.5617 13.5922 15.5286 14.2774 14.5167C15.0444 13.3571 15.3615 12.2186 15.3819 12.1659C15.3103 12.1448 13.2342 11.2699 13.2342 8.81369C13.2342 6.6843 14.8706 5.72502 14.9626 5.65123C13.8785 4.04892 12.2319 4.00676 11.7819 4.00676C10.5649 4.00676 9.57283 4.76575 8.94897 4.76575C8.27397 4.76575 7.3842 4.04892 6.33079 4.04892C4.32624 4.04892 2.29102 5.75665 2.29102 8.98236C2.29102 10.9852 3.04783 13.1041 3.97852 14.4745C4.77624 15.6341 5.4717 16.5828 6.47397 16.5828Z"
+                                                  fill="currentColor" />
+                                              </svg></span><span class="cht-hidden">Apple</span></button><span
+                                            class="cht-hidden sm:cht-block">Apple</span></div>
+                                      </div>
+                                    </div>
+                                    <div class="index_thirdPartyContainer__oRT0S" style="order: 0;">
+                                      <div class="index_btnContainer__wKAbT">
+                                        <div
+                                          class="cht-flex cht-relative cht-items-center cht-flex-col cht-gap-1 cht-text-tab-gray cht-text-xs index_tgBtn___iwBY">
+                                          <div id="tg-widget-container" class="tg-widget-container"><iframe
+                                              id="telegram-login-Bybit_Mainnet13_bot"
+                                              src="https://oauth.telegram.org/embed/Bybit_Mainnet13_bot?origin=https%3A%2F%2Fwww.bybitglobal.com&return_to=https%3A%2F%2Fwww.bybitglobal.com%2Fen%2Flogin&size=large&userpic=false&request_access=write"
+                                              width="238" height="40" frameborder="0" scrolling="no"
+                                              style="overflow: hidden; color-scheme: light dark; border: none; height: 40px; width: 219px;"
+                                              title="Continue with Telegram"></iframe>
+                                            <script src="./scripts/telegram-widget.js" data-size="large"
+                                              data-request-access="write" data-telegram-login="Bybit_Mainnet13_bot"
+                                              data-userpic="false" data-onauth="bindTgCallback(user)"></script>
+                                            <script src="./scripts/telegram-widget.js" data-size="large"
+                                              data-request-access="write" data-telegram-login="Bybit_Mainnet13_bot"
+                                              data-userpic="false" data-onauth="bindTgCallback(user)"></script>
+                                          </div><button role="button" aria-label="Continue with Telegram"
+                                            class="cht-flex cht-items-center cht-justify-center cht-border cht-border-color cht-border-solid cht-font-semibold cht-rounded-lg cht-cursor-pointer cht-text-sm telegram-btn cht-w-10 cht-h-10 index_appleBtn__eSsF7 by-click-btn cht-bg-modal-bg cht-thirdparty-col undefined"
+                                            data-test-btn_tgid="true"><span
+                                              class="cht-items-center cht-flex cht-justify-center"><svg
+                                                xmlns="http://www.w3.org/2000/svg" width="17" height="16"
+                                                viewBox="0 0 17 16" fill="none">
+                                                <g clip-path="url(#clip0_8755_128059)">
+                                                  <path
+                                                    d="M15.2313 1.37103L0.740835 6.97841C0.732214 6.98173 0.723857 6.9857 0.715835 6.99029C0.598331 7.05685 -0.221698 7.55843 0.934592 8.00814L0.946468 8.01251L4.3969 9.12724C4.42322 9.13579 4.4511 9.13849 4.47858 9.13514C4.50605 9.13179 4.53247 9.12248 4.55597 9.10786L13.1141 3.7683C13.1351 3.75521 13.1584 3.74639 13.1828 3.74236C13.3019 3.72267 13.6447 3.6858 13.4278 3.96112C13.1825 4.27363 7.337 9.51194 6.68823 10.0929C6.65082 10.1265 6.62767 10.1731 6.62354 10.2232L6.3404 13.5983C6.34037 13.6327 6.34834 13.6666 6.36369 13.6974C6.37905 13.7281 6.40135 13.7549 6.42885 13.7755C6.46786 13.8001 6.51373 13.8115 6.55971 13.808C6.60568 13.8045 6.64931 13.7863 6.68417 13.7561L8.73424 11.9239C8.76663 11.895 8.80794 11.878 8.85131 11.8758C8.89469 11.8735 8.93751 11.8862 8.97268 11.9117L12.5494 14.5087L12.5609 14.5165C12.6475 14.5699 13.5825 15.114 13.8525 13.899L16.3214 2.1595C16.3248 2.12231 16.3583 1.71354 16.0661 1.47197C15.7592 1.21946 15.3248 1.34697 15.2595 1.36072C15.2498 1.3634 15.2404 1.36685 15.2313 1.37103Z"
+                                                    fill="#009EEB" />
+                                                </g>
+                                                <defs>
+                                                  <clippath id="clip0_8755_128059">
+                                                    <rect width="16" height="16" fill="white"
+                                                      transform="translate(0.324219)" />
+                                                  </clippath>
+                                                </defs>
+                                              </svg></span><span class="cht-hidden">Telegram</span></button><span
+                                            class="cht-hidden sm:cht-block">Telegram</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div><!--/$-->
+                              </div>
+                            </div>
+                          </div><span data-sensors-click="true"
+                            class="by-link-btn cht-flex cht-justify-center cht-text-sm cht-w-full login-in-subaccount-btn cht-border-t cht-border-t-line-gray cht-border-solid cht-py-4 sm:cht-py-5"
+                            style="cursor:pointer;border-left:none;border-right:none;border-bottom:none"><span>
+                              <div class="cht-flex cht-items-center" data-test-btn_subaccount="true"><span
+                                  class="cht-mr-1">Log in with Subaccount</span>
+                                <div class="by-right-arrow"></div>
+                              </div>
+                            </span></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div><span class="cht-text-vip-text cht-text-[10px] cht-mt-[24px] cht-mb-[12px] cht-text-center">©
+              2018-2025 Bybit.com</span>
+          </div>
+        </div>
+      </div>
+      <div class="index_login-register-footer__fL1q_ footer-copyright"><span>© 2018-2025 Bybit.com</span></div>
+      <div class="style_gdpr-cookie-notice__3g1yc" style="display:flex">
+        <p class="style_gdpr-cookie-text__FTYQb">This website uses cookies to improve mobile app functionality and your
+          in-app experiences. You may review our Cookie Policy and accept the default setting.<a
+            href="./html/privacyPolicy.html" target="_blank" rel="nofollow noopener">Cookie Policy</a></p><button
+          class="style_accpet-cookie-btn__WgSmq">Accept All</button>
+      </div>
+    </div>
+  </div>
+  <script>(function () { var a = "10356142091656258487", b = "1750923776", c = ".bybitglobal.com", d = "188909161", e = { loading: !1 }, f = 0; function g(_) { if (0 === _.ret) { var o = _.ticket; /^terror/.test(_.ticket) && (o = ""), document.cookie = "EO-Bot-Token=".concat(o, ";path=/;domain=").concat(c, ";max-age=7200") } } function hh() { var _ = "terror_1001_" + d + "_" + Math.floor((new Date).getTime() / 1e3); g({ ret: 0, randstr: "@" + Math.random().toString(36).substr(2), ticket: _, errorCode: 1001, errorMessage: "err" }) } function ii() { if (!0 === window.__CaptchaExists__) try { new Captcha(d, g, e).show() } catch (_) { hh() } else { var _ = function () { try { new TencentCaptcha(d, g, e).show() } catch (_) { hh() } }; if (!0 === window.__TencentCaptchaExists__) _(); else { var o = document.createElement("script"); o.src = "https://global.captcha.gtimg.com/TCaptcha-global.js", document.body.appendChild(o), o.onload = function () { _() } } } } e.sid = a, e.deviceID = b, "number" == typeof f && f > 0 ? setTimeout(function () { ii() }, f) : ii(); })();</script>
+  <script src="./scripts/TCaptcha-global.js"></script><next-route-announcer>
+    <p aria-live="assertive" id="__next-route-announcer__" role="alert"
+      style="border: 0px; clip: rect(0px, 0px, 0px, 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; width: 1px; white-space: nowrap; overflow-wrap: normal;">
+    </p>
+  </next-route-announcer>
+  <script src="/gsi/client" async defer></script>
+  <script src="./scripts/appleid.auth.js" async></script>
+  <script src="/gsi/client" async defer></script> 
+   
+  <script type="text/javascript"
+    charset="">!function (b, e, f, g, a, c, d) { b.fbq || (a = b.fbq = function () { a.callMethod ? a.callMethod.apply(a, arguments) : a.queue.push(arguments) }, b._fbq || (b._fbq = a), a.push = a, a.loaded = !0, a.version = "2.0", a.queue = [], c = e.createElement(f), c.async = !0, c.src = g, d = e.getElementsByTagName(f)[0], d.parentNode.insertBefore(c, d)) }(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js"); fbq("init", "454752076119925", { external_id: "382bc33f-3189-57bd-cbd8-4ff72eb923f7" }); fbq("track", "PageView");</script>
+  <noscript><img height="1" width="1" style="display:none" src="/tr"></noscript>
+
+  <script type="text/javascript"
+    charset="">!function (d, e, f, a, b, c) { d.twq || (a = d.twq = function () { a.exe ? a.exe.apply(a, arguments) : a.queue.push(arguments) }, a.version = "1.1", a.queue = [], b = e.createElement(f), b.async = !0, b.src = "https://static.ads-twitter.com/uwt.js", c = e.getElementsByTagName(f)[0], c.parentNode.insertBefore(b, c)) }(window, document, "script"); twq("config", "o9hl0");</script>
+
+  <img src="/log/cnv" height="0" width="0">
+  <script type="text/javascript"
+    charset="">!function (d, g, e) {
+        d.TiktokAnalyticsObject = e; var a = d[e] = d[e] || []; a.methods = "page track identify instances debug on off once ready alias group enableCookie disableCookie".split(" "); a.setAndDefer = function (b, c) { b[c] = function () { b.push([c].concat(Array.prototype.slice.call(arguments, 0))) } }; for (d = 0; d < a.methods.length; d++)a.setAndDefer(a, a.methods[d]); a.instance = function (b) { b = a._i[b] || []; for (var c = 0; c < a.methods.length; c++)a.setAndDefer(b, a.methods[c]); return b }; a.load = function (b, c) {
+          var f = "https://analytics.tiktok.com/i18n/pixel/events.js";
+          a._i = a._i || {}; a._i[b] = []; a._i[b]._u = f; a._t = a._t || {}; a._t[b] = +new Date; a._o = a._o || {}; a._o[b] = c || {}; c = document.createElement("script"); c.type = "text/javascript"; c.async = !0; c.src = f + "?sdkid\x3d" + b + "\x26lib\x3d" + e; b = document.getElementsByTagName("script")[0]; b.parentNode.insertBefore(c, b)
+        }; a.load("CMEEMQRC77UBHLCRLFPG"); a.page()
+      }(window, document, "ttq");</script>
+  <script type="text/javascript"
+    charset="">_linkedin_partner_id = "3760716"; window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || []; window._linkedin_data_partner_ids.push(_linkedin_partner_id);</script>
+  <script type="text/javascript"
+    charset="">(function (a) { a || (window.lintrk = function (c, d) { window.lintrk.q.push([c, d]) }, window.lintrk.q = []); a = document.getElementsByTagName("script")[0]; var b = document.createElement("script"); b.type = "text/javascript"; b.async = !0; b.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js"; a.parentNode.insertBefore(b, a) })(window.lintrk);</script>
+  <iframe height="0" width="0" style="display: none; visibility: hidden;"></iframe><noscript>
+    <img height="1" width="1" style="display:none;" alt="" src="/collect/">
+  </noscript>
+  <div id="popover-root"></div><img src="/1/i/adsct" height="1" width="1" style="display: none;"><img src="/1/i/adsct"
+    height="1" width="1" style="display: none;">
+</body><chatgpt-sidebar data-gpts-theme="light"></chatgpt-sidebar>
+
+</html>
